@@ -1,0 +1,20 @@
+<div class="my-8" *ngIf="testModel">
+  <div class="flex justify-center items-center">
+    <mat-card class="screen px-8">
+      <div class="flex justify-between">
+        <div class="timer">{{ testModel.TestTime }}</div>
+        <button color="primary" mat-button>Close</button>
+      </div>
+      <div class="normal-view">
+        <div *ngFor="let para of testModel.Paragraph.Normal">
+          <p class="para font-medium" appTextHighlighter>{{ para }}</p>
+          <mat-form-field class="w-full">
+            <input class="para font-medium" matInput />
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-card>
+  </div>
+  <div class="pro-view"></div>
+  <div class="phone-view"></div>
+</div>

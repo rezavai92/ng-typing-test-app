@@ -1,0 +1,47 @@
+<div class="bg-current">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Test your typing skill in a minute</mat-card-title>
+      <mat-card-subtitle
+        >Type away to join 150+ million test takers!</mat-card-subtitle
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <!--Duration-->
+      <div class="mt-4 flex-row justify-center items-center">
+        <mat-form-field class="filter-dd-width mr-4">
+          <mat-label>
+            <mat-icon>timer</mat-icon>
+          </mat-label>
+          <mat-select [(value)]="selectedDuration">
+            <mat-option
+              *ngFor="let duration of durationOptions"
+              [value]="duration"
+              >{{ duration }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+
+        <!--Difficulty level-->
+
+        <mat-form-field class="filter-dd-width">
+          <mat-label>
+            <mat-icon>description</mat-icon>
+          </mat-label>
+          <mat-select [(value)]="selectedDifficultyLevel">
+            <mat-option
+              *ngFor="let difficulty of difficultyLevels"
+              [value]="difficulty"
+              >{{ difficulty }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+    <mat-card-actions class="flex-row justify-center">
+      <button color="primary" (click)="startTest()" mat-raised-button>
+        Start Test
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
