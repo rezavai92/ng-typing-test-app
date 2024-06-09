@@ -3,8 +3,7 @@ import { TestStarterCardComponent } from '../test-starter-card/test-starter-card
 
 @Component({
   selector: 'app-test-landing-page',
-  standalone: true,
-  imports: [TestStarterCardComponent],
+  standalone: false,
   templateUrl: './test-landing-page.component.html',
   styleUrl: './test-landing-page.component.scss',
 })

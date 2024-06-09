@@ -1,5 +1,5 @@
 export interface ITestModel {
-  checkResult: () => void;
+  prepareResultReport: (answeredWords: string[]) => void;
   startTest: () => void;
   stopTest: () => void;
   changeMode: () => void;

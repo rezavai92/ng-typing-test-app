@@ -23,34 +23,17 @@ import {
 } from 'rxjs';
 import { ITestModelFilter } from '../../interfaces/ITestModelFilter.interface';
 import { TestModel } from '../../../app-shared/models/TestModel';
-import { CommonModule } from '@angular/common';
+
 import { TestActionService } from '../../services/test-action.service';
 import { Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { TextHighlighterDirective } from '../../directives/text-highlighter.directive';
-import { TimerFormatPipe } from '../../../app-shared/pipes/timer-format.pipe';
+
+import { MatDialog } from '@angular/material/dialog';
+
+import { ViewResultComponent } from '../view-result/view-result.component';
+
 @Component({
   selector: 'app-test-editor',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    FormsModule,
-    MatIconModule,
-    TextHighlighterDirective,
-    ReactiveFormsModule,
-    TimerFormatPipe,
-  ],
+  standalone: false,
   templateUrl: './test-editor.component.html',
   styleUrl: './test-editor.component.scss',
 })
@@ -73,7 +56,8 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _typeTestService: TypeTestService,
     public testAction: TestActionService,
-    public router: Router
+    public router: Router,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -130,33 +114,58 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.testModel.Status = 'running';
     //this.testModel.startTest();
     this.timerSubscription = interval(1000)
-      .pipe(take(this.testModel.TestTime + 1), takeUntil(this.destroy$))
+      .pipe(take(this.testModel.TestTime), takeUntil(this.destroy$))
       .subscribe((res) => {
         this.remainingTime = this.testModel.TestTime - res - 1;
         if (this.remainingTime == 0) {
           this.testModel.Status = 'finished';
-          this.router.navigateByUrl('/');
+          this.viewResult();
         }
       });
   }
 
-  handleSpaceKey(config: any) {
+  viewResult() {
+    const f = this.dialog.open(ViewResultComponent, {
+      width: '500px',
+      data: {
+        testModel: this.testModel,
+        answeredWords: [],
+      },
+    });
+    f.afterClosed().subscribe((res) => {
+      this.router.navigateByUrl('/');
+    });
+  }
+
+  handleArrowKeys(event: KeyboardEvent) {
+    let arrows = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+
+    if (arrows.includes(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  handleSpaceKey(config: any, event: KeyboardEvent) {
+    if (config.currentWordIndex >= config.currentParaWordCount - 1) {
+      event.preventDefault();
+      return;
+    }
+
+    if (config.currentTypedWord.trim() == '') {
+      event.preventDefault();
+      return;
+    }
+
     config.wordStack.push(config.currentTypedWord);
     config.currentTypedWord = ' ';
 
     this.normalViewConfig.update((conf) => {
       conf.currentWordIndex++;
-      if (conf.currentWordIndex >= conf.currentParaWordCount) {
-        conf.currentParaIndex++;
-        conf.currentWordIndex = 0;
-        conf.currentParaWordCount =
-          this.testModel.Paragraph.Normal[conf.currentParaIndex].split(
-            ' '
-          ).length;
-      }
 
       return conf;
     });
+
+    this.normalViewConfig().wordStack;
   }
 
   handleBackspaceKey(config: any) {
@@ -210,10 +219,12 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const config = this.normalViewConfig();
 
+    this.handleArrowKeys(e);
+
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
       e.preventDefault();
     } else if (e.key == ' ') {
-      this.handleSpaceKey(config);
+      this.handleSpaceKey(config, e);
     } else if (e.key == 'Enter') {
       this.handleEnterKey();
     } else if (e.key.length == 1) {
