@@ -15,8 +15,14 @@ export class ViewResultComponent {
   constructor(
     public dialogRef: MatDialogRef<ViewResultComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { testModel: TestModel; answeredWords: string[] }
-  ) {
-    console.log('dialog data', data);
+    public data: { testModel: TestModel; filledupLines: string[] }
+  ) {}
+
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.data.testModel.prepareResultReport(this.data.filledupLines);
+
+    console.log('test model', this.data.testModel);
   }
 }

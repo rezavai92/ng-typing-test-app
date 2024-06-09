@@ -2,9 +2,16 @@
   <div class="flex justify-center items-center">
     <mat-card class="screen px-8">
       <div class="sticky flex justify-between">
-        <button disabled mat-button color="primary">
-          Time : {{ remainingTime | timerFormat }}
-        </button>
+        <div class="flex justify-center items-center">
+          <button class="w-2" disabled style="font-size: 16px" mat-icon-button>
+            <mat-icon>timer</mat-icon> &nbsp;
+          </button>
+
+          <button style="margin-left: -14px" class="w-2" mat-button disabled>
+            {{ remainingTime | timerFormat }}
+          </button>
+        </div>
+
         <button color="primary" mat-button>Close</button>
       </div>
       <div #normalViewScreen class="normal-view">

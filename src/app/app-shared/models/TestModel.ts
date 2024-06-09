@@ -22,30 +22,44 @@ export class TestModel implements ITestModel {
     this.Status = 'waiting';
   }
 
-  compareParagraph(actual: string[], answered: string[]) {
-    let i = 0;
-    let correctCount = 0;
-    while (i < actual.length) {
-      if (actual[i] == answered[i]) correctCount++;
+  compareTwoInputLinesInNormalTest(actual: string, written: string) {
+    let misTypeCount = 0;
+    let correct = 0;
+    let actualWords = actual.split(' ');
+    let writtenWords = written.split(' ');
+
+    for (let i = 0; i < writtenWords.length; i++) {
+      if (actualWords[i] == writtenWords[i]) {
+        correct++;
+      } else {
+        misTypeCount++;
+      }
     }
 
-    return [correctCount, actual.length - correctCount];
+    return {
+      misTypeCount,
+      correct,
+    };
   }
 
-  prepareResultReport(wordStack: string[]) {
-    let actualWords = this.Paragraph.Pro.split(' ');
-
+  prepareResultReport(filledUpLines: string[]) {
     let totalWords = this.Paragraph.Pro.split(' ').length;
+    filledUpLines = filledUpLines.filter((x) => x);
+    let totalCorrect = 0;
+    let totalMistypes = 0;
+    for (let i = 0; i < filledUpLines.length; i++) {
+      let { correct, misTypeCount } = this.compareTwoInputLinesInNormalTest(
+        this.Paragraph.Normal[i],
+        filledUpLines[i]
+      );
+      totalCorrect += correct;
+      totalMistypes += misTypeCount;
+    }
 
-    let [correct, mistTypeCount] = this.compareParagraph(
-      actualWords,
-      wordStack
-    );
-
-    let wpm = Math.floor(correct / (this.TestTime / 60));
+    let wpm = Math.floor(totalCorrect / (this.TestTime / 60));
     this.Result = {
-      MistypeCount: mistTypeCount,
-      Correct: totalWords - mistTypeCount,
+      MistypeCount: totalMistypes,
+      Correct: totalCorrect,
       TotalWords: totalWords,
       WPM: wpm,
     };

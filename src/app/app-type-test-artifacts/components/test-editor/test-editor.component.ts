@@ -129,7 +129,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       width: '500px',
       data: {
         testModel: this.testModel,
-        answeredWords: [],
+        filledupLines: this.constructParagraphFromCombinedInput(),
       },
     });
     f.afterClosed().subscribe((res) => {
@@ -186,6 +186,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     const config = this.normalViewConfig();
     config.wordStack.push(config.currentTypedWord);
     config.currentParaIndex++;
+
     if (config.currentParaIndex >= config.TotalPara) return;
     config.currentWordIndex = 0;
     config.currentParaWordCount =
@@ -196,6 +197,13 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.normalViewConfig.update((item) => ({ ...config }));
 
     this.focusNextPara();
+    config.currentTypedWord = ' ';
+  }
+
+  constructParagraphFromCombinedInput() {
+    return this.divs.map((y) => {
+      return y.nativeElement.querySelector('input').value;
+    });
   }
 
   focusNextPara() {

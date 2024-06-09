@@ -8,9 +8,9 @@
   <div class="body mt-2">
     Your result is:
 
-    <div>Mistype : {{ data.testModel.Result.MistypeCount }}</div>
-    <div>Correct : {{ data.testModel.Result.Correct }}</div>
-    <div>WPM : {{ data.testModel.Result.WPM }}</div>
+    <div>Mistype : {{ data?.testModel?.Result?.MistypeCount }}</div>
+    <div>Correct : {{ data?.testModel?.Result?.Correct }}</div>
+    <div>WPM : {{ data?.testModel?.Result?.WPM }}</div>
   </div>
   <div class="footer mb-2">
     <button mat-raised-button color="primary" (click)="dialogRef.close()">
