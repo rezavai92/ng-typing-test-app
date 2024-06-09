@@ -1,15 +1,47 @@
 <div class="my-8" *ngIf="testModel">
   <div class="flex justify-center items-center">
     <mat-card class="screen px-8">
-      <div class="flex justify-between">
-        <div class="timer">{{ testModel.TestTime }}</div>
+      <div class="sticky flex justify-between">
+        <button disabled mat-button color="primary">
+          Time : {{ remainingTime | timerFormat }}
+        </button>
         <button color="primary" mat-button>Close</button>
       </div>
-      <div class="normal-view">
-        <div *ngFor="let para of testModel.Paragraph.Normal">
-          <p class="para font-medium" appTextHighlighter>{{ para }}</p>
+      <div #normalViewScreen class="normal-view">
+        <div
+          class="prevent-select"
+          #paragraph
+          *ngFor="let para of testModel.Paragraph.Normal; let i = index"
+        >
+          <p class="para font-medium" appTextHighlighter>
+            @for (item of para.split(' '); track $index) {
+            <span
+              [ngClass]="
+                normalViewConfig().currentParaIndex == i &&
+                normalViewConfig().currentWordIndex == $index
+                  ? 'highlight'
+                  : ''
+              "
+              >{{ item }}</span
+            >
+            &nbsp; }
+          </p>
+
           <mat-form-field class="w-full">
-            <input class="para font-medium" matInput />
+            <input
+              [readonly]="normalViewConfig().currentParaIndex != i"
+              (copy)="(false)"
+              (cut)="(false)"
+              (paste)="(false)"
+              (dragstart)="(false)"
+              (dragend)="(false)"
+              (selectstart)="(false)"
+              (keydown)="startTyping($event)"
+              (mousedown)="(false)"
+              class="select-none para font-medium prevent-select"
+              style="word-spacing: 0.6rem"
+              matInput
+            />
           </mat-form-field>
         </div>
       </div>
