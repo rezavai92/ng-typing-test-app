@@ -34,8 +34,32 @@
             &nbsp; }
           </p>
 
-          <mat-form-field class="w-full">
+          <mat-form-field class="w-full white-bg input-form-field">
+            <ng-container>
+              <!-- <span
+                *ngFor="let str of normalViewConfig().typedlines[i]?.split(' ')"
+              >
+                {{ str }}
+              </span> -->
+              <div class="value-container">
+                <span
+                  *ngFor="
+                    let word of typedLines()[i]?.split(' ');
+                    let j = index
+                  "
+                  [ngClass]="{
+                    redHighlight:
+                      this.testModel.Paragraph.Normal[
+                        this.normalViewConfig().currentParaIndex
+                      ].split(' ')[j] != word
+                  }"
+                  >{{ word }}
+                </span>
+              </div>
+            </ng-container>
+
             <input
+              spellcheck="false"
               [readonly]="normalViewConfig().currentParaIndex != i"
               (copy)="(false)"
               (cut)="(false)"
@@ -43,10 +67,10 @@
               (dragstart)="(false)"
               (dragend)="(false)"
               (selectstart)="(false)"
-              (keydown)="startTyping($event)"
+              (keydown)="startTyping($event, i)"
               (mousedown)="(false)"
               class="select-none para font-medium prevent-select"
-              style="word-spacing: 0.6rem"
+              style="word-spacing: 0.6rem; color: white"
               matInput
             />
           </mat-form-field>

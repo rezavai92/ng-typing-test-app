@@ -16,7 +16,9 @@ export class ViewResultComponent {
     public dialogRef: MatDialogRef<ViewResultComponent>,
     @Inject(MAT_DIALOG_DATA)
     public data: { testModel: TestModel; filledupLines: string[] }
-  ) {}
+  ) {
+    dialogRef.disableClose = true;
+  }
 
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.

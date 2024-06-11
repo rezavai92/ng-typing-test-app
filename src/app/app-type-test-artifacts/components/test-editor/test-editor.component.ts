@@ -7,6 +7,7 @@ import {
   OnInit,
   QueryList,
   ViewChildren,
+  computed,
   signal,
   viewChildren,
 } from '@angular/core';
@@ -49,9 +50,15 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     currentParaWordCount: 0,
     currentTypedWord: ' ',
     wordStack: new Array(),
+    typedlines: new Array(),
     TotalPara: 0,
   });
 
+  typedLines = computed(() => {
+    let config = this.normalViewConfig();
+
+    return config.typedlines;
+  });
   @ViewChildren('paragraph') divs!: QueryList<ElementRef>;
   constructor(
     private _typeTestService: TypeTestService,
@@ -105,6 +112,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
                 ' '
               ).length,
             TotalPara: this.testModel.Paragraph.Normal.length,
+            typedlines: new Array(this.testModel.Paragraph.Normal.length),
           };
         });
       });
@@ -168,6 +176,14 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.normalViewConfig().wordStack;
   }
 
+  trackChange(event: any, index: number) {
+    console.log('track chagne event', event);
+    const config = this.normalViewConfig();
+    config.typedlines[index] = event.target.value;
+
+    this.normalViewConfig.update((conf) => ({ ...conf, ...config }));
+  }
+
   handleBackspaceKey(config: any) {
     config.currentTypedWord = config.currentTypedWord.slice(
       0,
@@ -215,31 +231,43 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleCharacterKey(key: string) {
-    this.normalViewConfig.update((config) => ({
+    let config = this.normalViewConfig();
+
+    let newConfig = {
       ...config,
       currentTypedWord: config.currentTypedWord + key,
-    }));
+    };
+
+    this.normalViewConfig.update((config) =>
+      JSON.parse(JSON.stringify(newConfig))
+    );
   }
-  startTyping(e: KeyboardEvent) {
+  startTyping(e: KeyboardEvent, i: number) {
     if (this.testModel.Status == 'waiting') {
       this.startTest();
     }
 
-    const config = this.normalViewConfig();
+    setTimeout(() => {
+      const config = this.normalViewConfig();
+      let targetInput: any = e?.target;
 
-    this.handleArrowKeys(e);
+      console.log('target value', e);
+      config.typedlines[i] = targetInput.value;
 
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
-      e.preventDefault();
-    } else if (e.key == ' ') {
-      this.handleSpaceKey(config, e);
-    } else if (e.key == 'Enter') {
-      this.handleEnterKey();
-    } else if (e.key.length == 1) {
-      this.handleCharacterKey(e.key);
-    } else if (e.key == 'Backspace') {
-      this.handleBackspaceKey(config);
-    }
+      this.handleArrowKeys(e);
+
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
+        e.preventDefault();
+      } else if (e.key == ' ') {
+        this.handleSpaceKey(config, e);
+      } else if (e.key == 'Enter') {
+        this.handleEnterKey();
+      } else if (e.key.length == 1) {
+        this.handleCharacterKey(e.key);
+      } else if (e.key == 'Backspace') {
+        this.handleBackspaceKey(config);
+      }
+    }, 100);
   }
 
   ngOnDestroy(): void {}
