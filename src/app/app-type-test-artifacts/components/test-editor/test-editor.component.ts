@@ -125,6 +125,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(take(this.testModel.TestTime), takeUntil(this.destroy$))
       .subscribe((res) => {
         this.remainingTime = this.testModel.TestTime - res - 1;
+        console.log('remaining time', this.remainingTime);
         if (this.remainingTime == 0) {
           this.testModel.Status = 'finished';
           this.viewResult();
@@ -154,15 +155,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleSpaceKey(config: any, event: KeyboardEvent) {
-    if (config.currentWordIndex >= config.currentParaWordCount - 1) {
-      event.preventDefault();
-      return;
-    }
-
-    if (config.currentTypedWord.trim() == '') {
-      event.preventDefault();
-      return;
-    }
+    console.log('handle space', config);
 
     config.wordStack.push(config.currentTypedWord);
     config.currentTypedWord = ' ';
@@ -210,10 +203,12 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         ' '
       ).length;
 
+    config.currentTypedWord = ' ';
+
     this.normalViewConfig.update((item) => ({ ...config }));
 
     this.focusNextPara();
-    config.currentTypedWord = ' ';
+    //  config.currentTypedWord = ' ';
   }
 
   constructParagraphFromCombinedInput() {
@@ -246,9 +241,20 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.testModel.Status == 'waiting') {
       this.startTest();
     }
+    const config = this.normalViewConfig();
 
+    if (e.key == ' ') {
+      if (config.currentWordIndex >= config.currentParaWordCount - 1) {
+        e.preventDefault();
+        return;
+      }
+
+      if (config.currentTypedWord == ' ') {
+        e.preventDefault();
+        return;
+      }
+    }
     setTimeout(() => {
-      const config = this.normalViewConfig();
       let targetInput: any = e?.target;
 
       console.log('target value', e);
@@ -267,8 +273,10 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       } else if (e.key == 'Backspace') {
         this.handleBackspaceKey(config);
       }
-    }, 100);
+    }, 0);
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    this.timerSubscription?.unsubscribe();
+  }
 }

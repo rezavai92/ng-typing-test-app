@@ -20,7 +20,7 @@
           #paragraph
           *ngFor="let para of testModel.Paragraph.Normal; let i = index"
         >
-          <p class="para font-medium" appTextHighlighter>
+          <p class="para font-medium">
             @for (item of para.split(' '); track $index) {
             <span
               [ngClass]="
@@ -51,7 +51,9 @@
                     redHighlight:
                       this.testModel.Paragraph.Normal[
                         this.normalViewConfig().currentParaIndex
-                      ].split(' ')[j] != word
+                      ].split(' ')[j] != word &&
+                      this.normalViewConfig().currentWordIndex > j &&
+                      this.normalViewConfig().currentParaIndex == i
                   }"
                   >{{ word }}
                 </span>
