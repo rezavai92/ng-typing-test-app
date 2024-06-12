@@ -12,7 +12,9 @@
           </button>
         </div>
 
-        <button color="primary" mat-button>Close</button>
+        <button color="primary" (click)="navigateToHome()" mat-button>
+          Close
+        </button>
       </div>
       <div #normalViewScreen class="normal-view">
         <div
@@ -20,7 +22,10 @@
           #paragraph
           *ngFor="let para of testModel.Paragraph.Normal; let i = index"
         >
-          <p class="para font-medium">
+          <p
+            *ngIf="i >= this.normalViewConfig().currentParaIndex"
+            class="para font-medium"
+          >
             @for (item of para.split(' '); track $index) {
             <span
               [ngClass]="
@@ -34,7 +39,10 @@
             &nbsp; }
           </p>
 
-          <mat-form-field class="w-full white-bg input-form-field">
+          <mat-form-field
+            *ngIf="i >= this.normalViewConfig().currentParaIndex"
+            class="w-full white-bg input-form-field"
+          >
             <ng-container>
               <!-- <span
                 *ngFor="let str of normalViewConfig().typedlines[i]?.split(' ')"

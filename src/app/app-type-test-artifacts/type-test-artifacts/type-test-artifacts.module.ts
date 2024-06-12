@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { TimerFormatPipe } from '../../app-shared/pipes/timer-format.pipe';
@@ -42,6 +43,7 @@ import { TestLandingPageComponent } from '../components/test-landing-page/test-l
     TimerFormatPipe,
     TextHighlighterDirective,
     MatCardActions,
+    MatDividerModule,
     //  MatCardModule,
     // MatButtonModule,
     // MatFormFieldModule,

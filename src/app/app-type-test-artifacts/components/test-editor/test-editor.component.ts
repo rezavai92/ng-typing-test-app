@@ -118,6 +118,10 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
+  navigateToHome() {
+    this.router.navigateByUrl('/');
+  }
+
   startTest() {
     this.testModel.Status = 'running';
     //this.testModel.startTest();
@@ -212,9 +216,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   constructParagraphFromCombinedInput() {
-    return this.divs.map((y) => {
-      return y.nativeElement.querySelector('input').value;
-    });
+    return this.typedLines();
   }
 
   focusNextPara() {
