@@ -60,7 +60,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return config.typedlines;
   });
-  @ViewChildren('paragraph') divs!: QueryList<ElementRef>;
+  @ViewChildren('paragraph') normalViewIndividualParas!: QueryList<ElementRef>;
   constructor(
     private _typeTestService: TypeTestService,
     public testAction: TestActionService,
@@ -223,7 +223,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   focusNextPara() {
-    this.divs.forEach((x, index) => {
+    this.normalViewIndividualParas.forEach((x, index) => {
       if (index == this.normalViewConfig().currentParaIndex) {
         x.nativeElement.querySelector('input').focus();
       }
