@@ -24,7 +24,5 @@ export class ViewResultComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.data.testModel.prepareResultReport(this.data.filledupLines);
-
-    console.log('test model', this.data.testModel);
   }
 }

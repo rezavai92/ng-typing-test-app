@@ -44,19 +44,23 @@ export class TestModel implements ITestModel {
   }
 
   prepareResultReport(filledUpLines: string[]) {
-    debugger;
     let totalWords = this.Paragraph.Pro.split(' ').length;
     filledUpLines = filledUpLines.filter((x) => x != null);
-    let totalCorrect = 0;
-    let totalMistypes = 0;
-    for (let i = 0; i < filledUpLines.length; i++) {
-      let { correct, misTypeCount } = this.compareTwoInputLinesInNormalTest(
-        this.Paragraph.Normal[i],
-        filledUpLines[i]
-      );
-      totalCorrect += correct;
-      totalMistypes += misTypeCount;
-    }
+
+    let { totalCorrect, totalMistypes } = filledUpLines.reduce(
+      (a, b, index) => {
+        let { correct, misTypeCount } = this.compareTwoInputLinesInNormalTest(
+          this.Paragraph.Normal[index],
+          b
+        );
+
+        a.totalCorrect += correct;
+        a.totalMistypes += misTypeCount;
+
+        return a;
+      },
+      { totalCorrect: 0, totalMistypes: 0 }
+    );
 
     let wpm = Math.floor(totalCorrect / (this.TestTime / 60));
     this.Result = {

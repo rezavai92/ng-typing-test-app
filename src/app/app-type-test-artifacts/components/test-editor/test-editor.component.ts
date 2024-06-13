@@ -130,7 +130,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(take(this.testModel.TestTime), takeUntil(this.destroy$))
       .subscribe((res) => {
         this.remainingTime = this.testModel.TestTime - res - 1;
-        console.log('remaining time', this.remainingTime);
+
         if (this.remainingTime == 0) {
           this.testModel.Status = 'finished';
           this.viewResult();
@@ -165,8 +165,6 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleSpaceKey(config: any, event: KeyboardEvent) {
-    console.log('handle space', config);
-
     config.wordStack.push(config.currentTypedWord);
     config.currentTypedWord = ' ';
 
@@ -180,7 +178,6 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   trackChange(event: any, index: number) {
-    console.log('track chagne event', event);
     const config = this.normalViewConfig();
     config.typedlines[index] = event.target.value;
 
@@ -265,7 +262,6 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       let targetInput: any = e?.target;
 
-      console.log('target value', e);
       config.typedlines[i] = targetInput.value;
 
       this.handleArrowKeys(e);
