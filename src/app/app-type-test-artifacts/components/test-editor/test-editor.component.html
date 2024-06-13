@@ -16,7 +16,7 @@
           Close
         </button>
       </div>
-      <div #normalViewScreen class="normal-view">
+      <div *ngIf="!this.resultLoading" #normalViewScreen class="normal-view">
         <div
           class="prevent-select"
           #paragraph
@@ -85,6 +85,13 @@
             />
           </mat-form-field>
         </div>
+      </div>
+
+      <div
+        class="h-full flex justify-center items-center"
+        *ngIf="this.resultLoading"
+      >
+        <mat-spinner mode="indeterminate"></mat-spinner>
       </div>
     </mat-card>
   </div>

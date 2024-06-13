@@ -28,8 +28,9 @@ export class TestModel implements ITestModel {
     let actualWords = actual.split(' ');
     let writtenWords = written.split(' ');
 
-    for (let i = 0; i < writtenWords.length; i++) {
-      if (actualWords[i] == writtenWords[i]) {
+    for (let i = 0; i < actualWords.length; i++) {
+      if (i >= writtenWords.length) misTypeCount++;
+      else if (actualWords[i] == writtenWords[i]) {
         correct++;
       } else {
         misTypeCount++;
@@ -43,8 +44,9 @@ export class TestModel implements ITestModel {
   }
 
   prepareResultReport(filledUpLines: string[]) {
+    debugger;
     let totalWords = this.Paragraph.Pro.split(' ').length;
-    filledUpLines = filledUpLines.filter((x) => x);
+    filledUpLines = filledUpLines.filter((x) => x != null);
     let totalCorrect = 0;
     let totalMistypes = 0;
     for (let i = 0; i < filledUpLines.length; i++) {

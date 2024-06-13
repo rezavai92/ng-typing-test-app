@@ -54,6 +54,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     TotalPara: 0,
   });
 
+  resultLoading = false;
   typedLines = computed(() => {
     let config = this.normalViewConfig();
 
@@ -138,16 +139,21 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   viewResult() {
-    const f = this.dialog.open(ViewResultComponent, {
-      width: '500px',
-      data: {
-        testModel: this.testModel,
-        filledupLines: this.constructParagraphFromCombinedInput(),
-      },
-    });
-    f.afterClosed().subscribe((res) => {
-      this.router.navigateByUrl('/');
-    });
+    this.resultLoading = true;
+
+    setTimeout(() => {
+      this.resultLoading = false;
+      const resultModalRef = this.dialog.open(ViewResultComponent, {
+        width: '500px',
+        data: {
+          testModel: this.testModel,
+          filledupLines: this.constructParagraphFromCombinedInput(),
+        },
+      });
+      resultModalRef.afterClosed().subscribe((res) => {
+        this.router.navigateByUrl('/');
+      });
+    }, 1000);
   }
 
   handleArrowKeys(event: KeyboardEvent) {
