@@ -1,6 +1,14 @@
 <div>
   <mat-toolbar color="primary">
-    <a [routerLink]="['/']"><i>typingtest.com</i></a>
+    <a [routerLink]="['/']">
+      <span class="brand-prefix">TypeBlitz</span>
+      <span class="brand-suffix">.com</span>
+    </a>
+
+    <div class="w-full flex justify-end">
+      <button mat-button class="navigation-btn mr-2">Pricing</button>
+      <button mat-button class="navigation-btn mr-2">Contact Us</button>
+    </div>
   </mat-toolbar>
   <router-outlet> </router-outlet>
 </div>
