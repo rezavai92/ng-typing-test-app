@@ -5,23 +5,29 @@
       <mat-icon>close</mat-icon>
     </button>
   </div>
-  <div class="mx-36 px-4 body mt-2 mb-4">
-    <h2 class="score-title">Your Test Score</h2>
+  <div class="flex-col justify-center items-center px-4 body mt-2 mb-4">
+    <h2 class="score-title text-center">Your Test Score</h2>
 
-    <div class="flex justify-between" style="width: 50%">
-      <div class="subtitle">Mistype :</div>
-      <div class="score-number">
-        {{ data?.testModel?.Result?.MistypeCount }}
+    <div class="flex justify-center items-center">
+      <div class="circle w-28 h-28">
+        <div class="subtitle text-center mt-4">Mistypes</div>
+        <div class="score-number text-center mt-2">
+          {{ data?.testModel?.Result?.MistypeCount }}
+        </div>
       </div>
-    </div>
-    <div class="flex justify-between" style="width: 50%">
-      <div class="subtitle">Correct :</div>
-      <div class="score-number">{{ data?.testModel?.Result?.Correct }}</div>
-    </div>
-    <div class="flex justify-between" style="width: 50%">
-      <div class="subtitle">WPM :</div>
-      &nbsp;
-      <div class="score-number">{{ data?.testModel?.Result?.WPM }}</div>
+      <div class="circle w-28 h-28 mx-4">
+        <div class="subtitle text-center mt-4">Correct</div>
+        <div class="score-number text-center mt-2">
+          {{ data?.testModel?.Result?.Correct }}
+        </div>
+      </div>
+      <div class="circle w-28 h-28">
+        <div class="subtitle text-center mt-4">WPM</div>
+
+        <div class="score-number text-center mt-2">
+          {{ data?.testModel?.Result?.WPM }}
+        </div>
+      </div>
     </div>
   </div>
   <mat-divider></mat-divider>

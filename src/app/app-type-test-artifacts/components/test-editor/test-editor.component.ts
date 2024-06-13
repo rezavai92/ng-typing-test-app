@@ -144,7 +144,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.resultLoading = false;
       const resultModalRef = this.dialog.open(ViewResultComponent, {
-        width: '500px',
+        width: '600px',
         data: {
           testModel: this.testModel,
           filledupLines: this.constructParagraphFromCombinedInput(),
