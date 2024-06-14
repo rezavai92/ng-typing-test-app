@@ -253,6 +253,18 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         return;
       }
     }
+
+    if (e.key == EditorKeys.Enter) {
+      console.log('config', config);
+      if (
+        config.currentWordIndex < config.currentParaWordCount - 1 ||
+        config.currentTypedWord == ' '
+      ) {
+        e.preventDefault();
+        return;
+      }
+    }
+
     setTimeout(() => {
       let targetInput: any = e?.target;
 
