@@ -166,7 +166,9 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  handleSpaceKey(config: INormalViewConfig, event: KeyboardEvent) {
+  handleSpaceKey() {
+    const config = this.normalViewConfig();
+
     config.wordStack.push(config.currentTypedWord);
     config.currentTypedWord = ' ';
     this.normalViewConfig.update((conf) => {
@@ -174,22 +176,22 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
       return conf;
     });
-
-    this.normalViewConfig().wordStack;
   }
 
-  handleBackspaceKey(config: any) {
+  handleBackspaceKey() {
+    let config = this.normalViewConfig();
+
     config.currentTypedWord = config.currentTypedWord.slice(
       0,
       config.currentTypedWord.length - 1
     );
 
     if (!config.currentTypedWord && config.currentWordIndex > 0) {
-      config.currentTypedWord = config.wordStack.pop();
+      config.currentTypedWord = config.wordStack.pop() as string;
       config.currentWordIndex--;
     }
 
-    this.normalViewConfig.update((config) => ({ ...config }));
+    this.normalViewConfig.update((item) => ({ ...config }));
   }
 
   handleEnterKey() {
@@ -199,12 +201,11 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (config.currentParaIndex >= config.TotalPara) return;
     config.currentWordIndex = 0;
-    config.currentParaWordCount =
-      this.testModel.Paragraph.Normal[config.currentParaIndex].split(
-        ' '
-      ).length;
+    config.currentParaWordCount = this.testModel.Paragraph.Normal[
+      config.currentParaIndex
+    ].split(EditorKeys.Space).length;
 
-    config.currentTypedWord = ' ';
+    config.currentTypedWord = EditorKeys.Space;
 
     this.normalViewConfig.update((item) => ({ ...config }));
 
@@ -236,26 +237,26 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
-  handleEnterKeyRestriction(e: KeyboardEvent, config: INormalViewConfig) {
-    if (
+  shouldPreventEnterKey(config: INormalViewConfig) {
+    return (
       config.currentWordIndex < config.currentParaWordCount - 1 ||
       config.currentTypedWord == ' '
-    ) {
-      e.preventDefault();
-      return;
-    }
+    );
   }
 
-  handleSpaceKeyRestriction(e: KeyboardEvent, config: INormalViewConfig) {
-    if (config.currentWordIndex >= config.currentParaWordCount - 1) {
-      e.preventDefault();
-      return;
-    }
+  shouldPreventSpaceKey(config: INormalViewConfig) {
+    let reachedLastWord =
+      config.currentWordIndex >= config.currentParaWordCount - 1;
+    let noWordTypedInCurrentIndex = config.currentTypedWord == EditorKeys.Space;
 
-    if (config.currentTypedWord == EditorKeys.Space) {
-      e.preventDefault();
-      return;
-    }
+    return reachedLastWord || noWordTypedInCurrentIndex;
+  }
+
+  shouldPreventBackspaceKey(config: INormalViewConfig) {
+    const noCharacterInCurrentLine =
+      config.currentWordIndex == 0 && config.currentTypedWord == ' ';
+
+    return noCharacterInCurrentLine;
   }
 
   startTyping(e: KeyboardEvent, i: number) {
@@ -264,30 +265,41 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     const config = this.normalViewConfig();
 
-    if (e.key == EditorKeys.Space) {
-      this.handleSpaceKeyRestriction(e, config);
+    if (e.key == EditorKeys.Space && this.shouldPreventSpaceKey(config)) {
+      e.preventDefault();
+      return;
     }
 
-    if (e.key == EditorKeys.Enter) {
-      this.handleEnterKeyRestriction(e, config);
+    if (e.key == EditorKeys.Enter && this.shouldPreventEnterKey(config)) {
+      e.preventDefault();
+      return;
+    }
+
+    if (
+      e.key == EditorKeys.Backspace &&
+      this.shouldPreventBackspaceKey(config)
+    ) {
+      e.preventDefault();
+      return;
     }
 
     setTimeout(() => {
       let targetInput: any = e?.target;
       config.typedlines[i] = targetInput.value;
+      this.normalViewConfig.update((item) => ({ ...config }));
 
       this.handleArrowKeys(e);
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
         e.preventDefault();
       } else if (e.key == EditorKeys.Space) {
-        this.handleSpaceKey(config, e);
+        this.handleSpaceKey();
       } else if (e.key == EditorKeys.Enter) {
         this.handleEnterKey();
       } else if (e.key.length == 1) {
         this.handleCharacterKey(e.key);
       } else if (e.key == EditorKeys.Backspace) {
-        this.handleBackspaceKey(config);
+        this.handleBackspaceKey();
       }
     }, 0);
   }
