@@ -1,16 +1,16 @@
 import { difficultyLevel } from '../../app-type-test-artifacts/types/common.types';
 import {
   ITestModel,
-  ITestModelResut,
+  ITestModelResult,
   ITestParagraph,
 } from './ITestModel.interface';
 
-export class TestModel implements ITestModel {
+export class TestModel {
   Paragraph: ITestParagraph;
   TestTime!: number;
   Difficulty!: difficultyLevel;
   Status!: 'running' | 'finished' | 'waiting';
-  Result!: ITestModelResut;
+  Result!: ITestModelResult;
   constructor(
     paragraph: ITestParagraph,
 
@@ -70,10 +70,4 @@ export class TestModel implements ITestModel {
       WPM: wpm,
     };
   }
-
-  startTest() {}
-
-  stopTest() {}
-
-  changeMode() {}
 }

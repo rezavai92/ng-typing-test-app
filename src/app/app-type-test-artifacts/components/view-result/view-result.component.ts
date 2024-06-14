@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ITestModelResut } from '../../../app-shared/models/ITestModel.interface';
+import { ITestModelResult } from '../../../app-shared/models/ITestModel.interface';
 import { TestModel } from '../../../app-shared/models/TestModel';
 
 @Component({
@@ -11,7 +11,7 @@ import { TestModel } from '../../../app-shared/models/TestModel';
   styleUrl: './view-result.component.scss',
 })
 export class ViewResultComponent {
-  result!: ITestModelResut;
+  result!: ITestModelResult;
   constructor(
     public dialogRef: MatDialogRef<ViewResultComponent>,
     @Inject(MAT_DIALOG_DATA)

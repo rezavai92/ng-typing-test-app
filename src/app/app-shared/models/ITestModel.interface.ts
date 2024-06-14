@@ -10,7 +10,7 @@ export interface ITestParagraph {
   Pro: string;
 }
 
-export interface ITestModelResut {
+export interface ITestModelResult {
   WPM: number;
   TotalWords: number;
   Correct: number;

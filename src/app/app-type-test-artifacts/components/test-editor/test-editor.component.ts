@@ -236,6 +236,28 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     );
   }
 
+  handleEnterKeyRestriction(e: KeyboardEvent, config: INormalViewConfig) {
+    if (
+      config.currentWordIndex < config.currentParaWordCount - 1 ||
+      config.currentTypedWord == ' '
+    ) {
+      e.preventDefault();
+      return;
+    }
+  }
+
+  handleSpaceKeyRestriction(e: KeyboardEvent, config: INormalViewConfig) {
+    if (config.currentWordIndex >= config.currentParaWordCount - 1) {
+      e.preventDefault();
+      return;
+    }
+
+    if (config.currentTypedWord == EditorKeys.Space) {
+      e.preventDefault();
+      return;
+    }
+  }
+
   startTyping(e: KeyboardEvent, i: number) {
     if (this.testModel.Status == 'waiting') {
       this.startTest();
@@ -243,31 +265,15 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     const config = this.normalViewConfig();
 
     if (e.key == EditorKeys.Space) {
-      if (config.currentWordIndex >= config.currentParaWordCount - 1) {
-        e.preventDefault();
-        return;
-      }
-
-      if (config.currentTypedWord == ' ') {
-        e.preventDefault();
-        return;
-      }
+      this.handleSpaceKeyRestriction(e, config);
     }
 
     if (e.key == EditorKeys.Enter) {
-      console.log('config', config);
-      if (
-        config.currentWordIndex < config.currentParaWordCount - 1 ||
-        config.currentTypedWord == ' '
-      ) {
-        e.preventDefault();
-        return;
-      }
+      this.handleEnterKeyRestriction(e, config);
     }
 
     setTimeout(() => {
       let targetInput: any = e?.target;
-
       config.typedlines[i] = targetInput.value;
 
       this.handleArrowKeys(e);
