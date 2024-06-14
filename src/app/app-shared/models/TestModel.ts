@@ -28,9 +28,8 @@ export class TestModel {
     let actualWords = actual.split(' ');
     let writtenWords = written.split(' ');
 
-    for (let i = 0; i < actualWords.length; i++) {
-      if (i >= writtenWords.length) misTypeCount++;
-      else if (actualWords[i] == writtenWords[i]) {
+    for (let i = 0; i < writtenWords.length; i++) {
+      if (actualWords[i] == writtenWords[i]) {
         correct++;
       } else {
         misTypeCount++;
