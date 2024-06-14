@@ -1,5 +1,6 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   OnDestroy,
@@ -63,7 +64,8 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     private _typeTestService: TypeTestService,
     public testAction: TestActionService,
     public router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +74,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.focusNextPara();
+    this.cdr.detectChanges();
   }
 
   subscribeFilter() {
