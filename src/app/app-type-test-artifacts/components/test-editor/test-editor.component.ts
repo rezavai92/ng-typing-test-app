@@ -2,36 +2,34 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Input,
   OnDestroy,
   OnInit,
   QueryList,
   ViewChildren,
+  WritableSignal,
   computed,
   signal,
-  viewChildren,
 } from '@angular/core';
-import { ITestModel } from '../../../app-shared/models/ITestModel.interface';
+
 import { TypeTestService } from '../../services/type-test.service';
-import {
-  Subject,
-  Subscription,
-  interval,
-  take,
-  takeUntil,
-  tap,
-  timer,
-} from 'rxjs';
+import { Subject, Subscription, interval, take, takeUntil, tap } from 'rxjs';
 import { ITestModelFilter } from '../../interfaces/ITestModelFilter.interface';
 import { TestModel } from '../../../app-shared/models/TestModel';
-
 import { TestActionService } from '../../services/test-action.service';
 import { Router } from '@angular/router';
-
 import { MatDialog } from '@angular/material/dialog';
-
 import { ViewResultComponent } from '../view-result/view-result.component';
+import { EditorKeys } from '../../../app-shared/constants/keyboardData';
 
+export interface INormalViewConfig {
+  currentParaIndex: number;
+  currentWordIndex: number;
+  currentParaWordCount: number;
+  currentTypedWord: string;
+  wordStack: string[];
+  typedlines: string[];
+  TotalPara: number;
+}
 @Component({
   selector: 'app-test-editor',
   standalone: false,
@@ -44,13 +42,13 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   destroy$: Subject<any> = new Subject();
   timerSubscription!: Subscription;
   remainingTime!: number;
-  normalViewConfig = signal({
+  normalViewConfig: WritableSignal<INormalViewConfig> = signal({
     currentParaIndex: 0,
     currentWordIndex: 0,
     currentParaWordCount: 0,
     currentTypedWord: ' ',
-    wordStack: new Array(),
-    typedlines: new Array(),
+    wordStack: [],
+    typedlines: [],
     TotalPara: 0,
   });
 
@@ -81,7 +79,6 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         tap((res) => {
-          //  debugger;
           if (res) {
             this.filter = res as ITestModelFilter;
             this.loadTestModel();
@@ -98,13 +95,14 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       .loadTestModels(this.filter)
       .pipe(take(1))
       .subscribe((res) => {
-        //     debugger;
         const cloned = JSON.parse(JSON.stringify(res[0])) as TestModel;
-
         this.testModel = new TestModel(cloned.Paragraph, cloned.Difficulty);
-
         this.testModel.TestTime = this.filter.duration;
         this.remainingTime = this.testModel.TestTime;
+        const typedLines: string[] = new Array(
+          this.testModel.Paragraph.Normal.length
+        );
+
         this.normalViewConfig.update((config) => {
           return {
             ...config,
@@ -113,7 +111,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
                 ' '
               ).length,
             TotalPara: this.testModel.Paragraph.Normal.length,
-            typedlines: new Array(this.testModel.Paragraph.Normal.length),
+            typedlines: typedLines,
           };
         });
       });
@@ -125,7 +123,6 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   startTest() {
     this.testModel.Status = 'running';
-    //this.testModel.startTest();
     this.timerSubscription = interval(1000)
       .pipe(take(this.testModel.TestTime), takeUntil(this.destroy$))
       .subscribe((res) => {
@@ -157,17 +154,21 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   handleArrowKeys(event: KeyboardEvent) {
-    let arrows = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'];
+    let arrows: string[] = [
+      EditorKeys.ArrowDown,
+      EditorKeys.ArrowRight,
+      EditorKeys.ArrowLeft,
+      EditorKeys.ArrowUp,
+    ];
 
     if (arrows.includes(event.key)) {
       event.preventDefault();
     }
   }
 
-  handleSpaceKey(config: any, event: KeyboardEvent) {
+  handleSpaceKey(config: INormalViewConfig, event: KeyboardEvent) {
     config.wordStack.push(config.currentTypedWord);
     config.currentTypedWord = ' ';
-
     this.normalViewConfig.update((conf) => {
       conf.currentWordIndex++;
 
@@ -175,13 +176,6 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.normalViewConfig().wordStack;
-  }
-
-  trackChange(event: any, index: number) {
-    const config = this.normalViewConfig();
-    config.typedlines[index] = event.target.value;
-
-    this.normalViewConfig.update((conf) => ({ ...conf, ...config }));
   }
 
   handleBackspaceKey(config: any) {
@@ -215,7 +209,6 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.normalViewConfig.update((item) => ({ ...config }));
 
     this.focusNextPara();
-    //  config.currentTypedWord = ' ';
   }
 
   constructParagraphFromCombinedInput() {
@@ -242,13 +235,14 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       JSON.parse(JSON.stringify(newConfig))
     );
   }
+
   startTyping(e: KeyboardEvent, i: number) {
     if (this.testModel.Status == 'waiting') {
       this.startTest();
     }
     const config = this.normalViewConfig();
 
-    if (e.key == ' ') {
+    if (e.key == EditorKeys.Space) {
       if (config.currentWordIndex >= config.currentParaWordCount - 1) {
         e.preventDefault();
         return;
@@ -268,13 +262,13 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
         e.preventDefault();
-      } else if (e.key == ' ') {
+      } else if (e.key == EditorKeys.Space) {
         this.handleSpaceKey(config, e);
-      } else if (e.key == 'Enter') {
+      } else if (e.key == EditorKeys.Enter) {
         this.handleEnterKey();
       } else if (e.key.length == 1) {
         this.handleCharacterKey(e.key);
-      } else if (e.key == 'Backspace') {
+      } else if (e.key == EditorKeys.Backspace) {
         this.handleBackspaceKey(config);
       }
     }, 0);
@@ -282,5 +276,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.timerSubscription?.unsubscribe();
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 }
