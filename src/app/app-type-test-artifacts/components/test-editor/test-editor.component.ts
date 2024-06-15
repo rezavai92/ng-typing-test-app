@@ -170,52 +170,6 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  handleSpaceKey() {
-    const config = this.normalViewConfig();
-
-    config.wordStack.push(config.currentTypedWord);
-    config.currentTypedWord = ' ';
-    this.normalViewConfig.update((conf) => {
-      conf.currentWordIndex++;
-
-      return conf;
-    });
-  }
-
-  handleBackspaceKey() {
-    let config = this.normalViewConfig();
-
-    config.currentTypedWord = config.currentTypedWord.slice(
-      0,
-      config.currentTypedWord.length - 1
-    );
-
-    if (!config.currentTypedWord && config.currentWordIndex > 0) {
-      config.currentTypedWord = config.wordStack.pop() as string;
-      config.currentWordIndex--;
-    }
-
-    this.normalViewConfig.update((item) => ({ ...config }));
-  }
-
-  handleEnterKey() {
-    const config = this.normalViewConfig();
-    config.wordStack.push(config.currentTypedWord);
-    config.currentParaIndex++;
-
-    if (config.currentParaIndex >= config.TotalPara) return;
-    config.currentWordIndex = 0;
-    config.currentParaWordCount = this.testModel.Paragraph.Normal[
-      config.currentParaIndex
-    ].split(EditorKeys.Space).length;
-
-    config.currentTypedWord = EditorKeys.Space;
-
-    this.normalViewConfig.update((item) => ({ ...config }));
-
-    this.focusNextPara();
-  }
-
   constructParagraphFromCombinedInput() {
     return this.typedLines();
   }
@@ -226,19 +180,6 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         x.nativeElement.querySelector('input').focus();
       }
     });
-  }
-
-  handleCharacterKey(key: string) {
-    let config = this.normalViewConfig();
-
-    let newConfig = {
-      ...config,
-      currentTypedWord: config.currentTypedWord + key,
-    };
-
-    this.normalViewConfig.update((config) =>
-      JSON.parse(JSON.stringify(newConfig))
-    );
   }
 
   shouldPreventEnterKey(config: INormalViewConfig) {
@@ -263,39 +204,29 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     return noCharacterInCurrentLine;
   }
 
-  getEditorKeyFromInput(key: string) {
-    switch (key) {
-      case EditorKeys.Space:
-        return EditorKeys.Space;
-      case EditorKeys.Backspace:
-        return EditorKeys.Backspace;
-      case EditorKeys.Enter:
-        return EditorKeys.Enter;
-      case EditorKeys.ArrowDown:
-        return EditorKeys.ArrowDown;
-      case EditorKeys.ArrowLeft:
-        return EditorKeys.Backspace;
-      case EditorKeys.ArrowRight:
-        return EditorKeys.ArrowRight;
-      case EditorKeys.ArrowUp:
-        return EditorKeys.ArrowUp;
-      default:
-        return EditorKeys.SingleChar;
-    }
+  getEditorKeyFromInput(key: string): EditorKeys {
+    const defaultKeys: string[] = [
+      EditorKeys.Space,
+      EditorKeys.Backspace,
+      EditorKeys.ArrowDown,
+      EditorKeys.ArrowLeft,
+      EditorKeys.ArrowRight,
+      EditorKeys.ArrowUp,
+      EditorKeys.Enter,
+    ];
+
+    return (
+      defaultKeys.includes(key) ? key : EditorKeys.SingleChar
+    ) as EditorKeys;
   }
 
   getKeyEventCallback(key: string) {
-    switch (key) {
-      case EditorKeys.Enter:
-        return this.focusNextPara.bind(this);
-
-      default:
-        return null;
-    }
+    if (EditorKeys.Enter) return this.focusNextPara.bind(this);
+    return null;
   }
+
   handlePermittedKeys(e: KeyboardEvent) {
     let key = this.getEditorKeyFromInput(e.key);
-    // debugger;
     const keyHandletrategyContext = new InputKeyHandlerStrategyContext(
       key,
       this.testModel
@@ -342,18 +273,20 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
-    let config = this.normalViewConfig();
-
     setTimeout(() => {
-      let targetInput: any = e?.target;
-      config.typedlines[i] = targetInput.value;
-      this.normalViewConfig.update((item) => ({ ...config }));
+      this.updateTypedLines(e, i);
       this.preventRestrictedKeys(e);
 
       this.handlePermittedKeys(e);
     }, 0);
   }
 
+  updateTypedLines(e: KeyboardEvent, i: number) {
+    const config = this.normalViewConfig();
+    let targetInput: any = e?.target;
+    config.typedlines[i] = targetInput.value;
+    this.normalViewConfig.update((item) => ({ ...config }));
+  }
   ngOnDestroy(): void {
     this.timerSubscription?.unsubscribe();
     this.destroy$.next(true);
