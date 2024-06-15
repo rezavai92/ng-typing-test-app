@@ -21,6 +21,7 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewResultComponent } from '../view-result/view-result.component';
 import { EditorKeys } from '../../../app-shared/constants/keyboardData';
+import { InputKeyHandlerStrategyContext } from '../../models/contexts/KeyHandlerStrategyContext';
 
 export interface INormalViewConfig {
   currentParaIndex: number;
@@ -262,48 +263,94 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     return noCharacterInCurrentLine;
   }
 
+  getEditorKeyFromInput(key: string) {
+    switch (key) {
+      case EditorKeys.Space:
+        return EditorKeys.Space;
+      case EditorKeys.Backspace:
+        return EditorKeys.Backspace;
+      case EditorKeys.Enter:
+        return EditorKeys.Enter;
+      case EditorKeys.ArrowDown:
+        return EditorKeys.ArrowDown;
+      case EditorKeys.ArrowLeft:
+        return EditorKeys.Backspace;
+      case EditorKeys.ArrowRight:
+        return EditorKeys.ArrowRight;
+      case EditorKeys.ArrowUp:
+        return EditorKeys.ArrowUp;
+      default:
+        return EditorKeys.SingleChar;
+    }
+  }
+
+  getKeyEventCallback(key: string) {
+    switch (key) {
+      case EditorKeys.Enter:
+        return this.focusNextPara.bind(this);
+
+      default:
+        return null;
+    }
+  }
+  handlePermittedKeys(e: KeyboardEvent) {
+    let key = this.getEditorKeyFromInput(e.key);
+    // debugger;
+    const keyHandletrategyContext = new InputKeyHandlerStrategyContext(
+      key,
+      this.testModel
+    );
+    const keyHandleStrategy = keyHandletrategyContext.getStrategy();
+
+    if (keyHandleStrategy) {
+      keyHandleStrategy.handleKey(
+        key,
+        this.normalViewConfig,
+        this.getKeyEventCallback(e.key)
+      );
+    }
+  }
+
+  preventRestrictedKeys(e: KeyboardEvent) {
+    this.handleArrowKeys(e);
+
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
+      e.preventDefault();
+    }
+  }
+
+  isPreventableKey(key: string) {
+    const config = this.normalViewConfig();
+    const preventableSpaceKey =
+      key == EditorKeys.Space && this.shouldPreventSpaceKey(config);
+    const preventableEnterKey =
+      key == EditorKeys.Enter && this.shouldPreventEnterKey(config);
+    const preventableBackspaceKey =
+      key == EditorKeys.Backspace && this.shouldPreventBackspaceKey(config);
+
+    return (
+      preventableSpaceKey || preventableEnterKey || preventableBackspaceKey
+    );
+  }
   startTyping(e: KeyboardEvent, i: number) {
     if (this.testModel.Status == 'waiting') {
       this.startTest();
     }
-    const config = this.normalViewConfig();
 
-    if (e.key == EditorKeys.Space && this.shouldPreventSpaceKey(config)) {
+    if (this.isPreventableKey(e.key)) {
       e.preventDefault();
       return;
     }
 
-    if (e.key == EditorKeys.Enter && this.shouldPreventEnterKey(config)) {
-      e.preventDefault();
-      return;
-    }
-
-    if (
-      e.key == EditorKeys.Backspace &&
-      this.shouldPreventBackspaceKey(config)
-    ) {
-      e.preventDefault();
-      return;
-    }
+    let config = this.normalViewConfig();
 
     setTimeout(() => {
       let targetInput: any = e?.target;
       config.typedlines[i] = targetInput.value;
       this.normalViewConfig.update((item) => ({ ...config }));
+      this.preventRestrictedKeys(e);
 
-      this.handleArrowKeys(e);
-
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'a') {
-        e.preventDefault();
-      } else if (e.key == EditorKeys.Space) {
-        this.handleSpaceKey();
-      } else if (e.key == EditorKeys.Enter) {
-        this.handleEnterKey();
-      } else if (e.key.length == 1) {
-        this.handleCharacterKey(e.key);
-      } else if (e.key == EditorKeys.Backspace) {
-        this.handleBackspaceKey();
-      }
+      this.handlePermittedKeys(e);
     }, 0);
   }
 

@@ -6,4 +6,5 @@ export enum EditorKeys {
   Backspace = 'Backspace',
   Space = ' ',
   Enter = 'Enter',
+  SingleChar = 'SingleChar',
 }
