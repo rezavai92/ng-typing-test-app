@@ -16,6 +16,8 @@ text selection, copy, paste, cut, arrows(left,right,top,down), space without typ
 #### Angular signals (writable, computed)
 #### Strategy Design pattern (for handling different type of keys)
 #### Domain Modeling
+#### Unit testing with Jasmine
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
