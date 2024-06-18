@@ -1,10 +1,13 @@
+import { Injectable } from '@angular/core';
 import { TestModel } from './TestModel';
 
+@Injectable()
 export class ScoreReporter {
-  private _testModel: TestModel;
+  _testModel: TestModel;
 
   constructor(testModel: TestModel) {
     this._testModel = testModel;
+    this._testModel.TestTime = 30;
   }
 
   compareTwoInputLinesInNormalTest(actual: string, written: string) {

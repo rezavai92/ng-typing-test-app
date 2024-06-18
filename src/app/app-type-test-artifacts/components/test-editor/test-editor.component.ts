@@ -276,7 +276,6 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     setTimeout(() => {
       this.updateTypedLines(e, i);
       this.preventRestrictedKeys(e);
-
       this.handlePermittedKeys(e);
     }, 0);
   }
