@@ -1,6 +1,22 @@
 # NgTypingTestApp
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
+## 🎨 User Interface
+
+1. **Start Test**
+   <br>
+   ![Start Test](https://github.com/rezavai92/ng-typing-test-app/assets/47608395/0419b0a5-ebb7-4432-bace-c4db9b1d896a)
+   <br><br>
+
+2. **The Text Editor**
+   <br>
+   ![The Text Editor](https://github.com/rezavai92/ng-typing-test-app/assets/47608395/a56e8409-25d1-4cb3-a323-398b5a003bfd)
+   <br><br>
+
+3. **Score Card**
+   <br>
+   ![Score Card](https://github.com/rezavai92/ng-typing-test-app/assets/47608395/0dfe5118-b4a3-4693-a945-a876807c30dd)
+   <br>
 
 ## 🔑 Key Features
 
@@ -40,8 +56,6 @@ These dom events are prevented in text editor for the ease of typing
  - **Cut, Copy & Paste** 
  - **arrows(left,right,top,down)** 
  - **space without typing any character** 
-
-
 
 
 
