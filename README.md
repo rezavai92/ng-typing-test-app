@@ -2,19 +2,18 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
 
-## Key features
-#### Check typing speed
-You can test your typing speed in different time intervals (30 sec, 1 min, 2 min, 3 min, 5 min)
-#### See Mistypes count
-You can see the number of mistypes in your test
+## 🔑 Key Features
 
-## Restriction
-These dom events are prevented in text editor for the ease of typing
- - **text selection** 
- - **Cut, Copy & Paste** 
- - **arrows(left,right,top,down)** 
- - **space without typing any character** 
+- **⏱️ Check Typing Speed**
+  - Test your typing speed across various intervals:
+    - 30 seconds
+    - 1 minute
+    - 2 minutes
+    - 3 minutes
+    - 5 minutes
 
+- **🔍 See Mistypes Count**
+  - View the number of mistypes in your test for improved accuracy and feedback.
 
 
 ## 🚀 Tech Features
@@ -33,6 +32,18 @@ These dom events are prevented in text editor for the ease of typing
 - **✅ Unit Testing with Jasmine**
   - Ensure your code is rock-solid and bug-free.
   - Leverage Jasmine for comprehensive and reliable unit tests.
+ 
+
+## Restriction
+These dom events are prevented in text editor for the ease of typing
+ - **text selection** 
+ - **Cut, Copy & Paste** 
+ - **arrows(left,right,top,down)** 
+ - **space without typing any character** 
+
+
+
+
 
 
 
