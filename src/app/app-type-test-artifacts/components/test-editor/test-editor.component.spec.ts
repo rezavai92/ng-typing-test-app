@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestEditorComponent } from './test-editor.component';
+import { TypeTestArtifactsModule } from '../../type-test-artifacts/type-test-artifacts.module';
 
 describe('TestEditorComponent', () => {
   let component: TestEditorComponent;
@@ -8,10 +9,9 @@ describe('TestEditorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TestEditorComponent]
-    })
-    .compileComponents();
-    
+      imports: [TypeTestArtifactsModule],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(TestEditorComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
