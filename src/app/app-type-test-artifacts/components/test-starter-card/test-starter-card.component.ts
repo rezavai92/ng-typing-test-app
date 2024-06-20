@@ -1,13 +1,9 @@
 import { Component } from '@angular/core';
-
-import { FormControl } from '@angular/forms';
 import { difficultyLevel } from '../../types/common.types';
-
 import { Router } from '@angular/router';
 import { TestActionService } from '../../services/test-action.service';
 @Component({
   selector: 'app-test-starter-card',
-
   templateUrl: './test-starter-card.component.html',
   styleUrl: './test-starter-card.component.scss',
 })

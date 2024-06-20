@@ -6,10 +6,12 @@ import { ReactiveFormsModule, FormControl } from '@angular/forms';
 import { of } from 'rxjs';
 import { TypeTestArtifactsModule } from '../../type-test-artifacts/type-test-artifacts.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { DebugElement } from '@angular/core';
 
 describe('TestStarterCardComponent', () => {
   let component: TestStarterCardComponent;
   let fixture: ComponentFixture<TestStarterCardComponent>;
+  let el: DebugElement;
   let routerSpy = jasmine.createSpyObj('Router', ['navigateByUrl']);
   let testActionServiceSpy = jasmine.createSpyObj('TestActionService', [
     'emitFilter',
@@ -27,6 +29,7 @@ describe('TestStarterCardComponent', () => {
 
     fixture = TestBed.createComponent(TestStarterCardComponent);
     component = fixture.componentInstance;
+    el = fixture.debugElement;
 
     fixture.detectChanges();
   });
@@ -56,6 +59,39 @@ describe('TestStarterCardComponent', () => {
     expect(testActionServiceSpy.emitFilter).toHaveBeenCalledWith({
       difficultyLevel: 'easy',
       duration: 30,
+    });
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('test');
+  });
+
+  it('1 min easy typing test', () => {
+    component.selectedDifficultyLevel = 'easy';
+    component.selectedDuration = 60;
+    component.startTest();
+    expect(testActionServiceSpy.emitFilter).toHaveBeenCalledWith({
+      difficultyLevel: 'easy',
+      duration: 60,
+    });
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('test');
+  });
+
+  it('1 min medium typing test', () => {
+    component.selectedDifficultyLevel = 'medium';
+    component.selectedDuration = 60;
+    component.startTest();
+    expect(testActionServiceSpy.emitFilter).toHaveBeenCalledWith({
+      difficultyLevel: 'medium',
+      duration: 60,
+    });
+    expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('test');
+  });
+
+  it('1 min hard typing test', () => {
+    component.selectedDifficultyLevel = 'hard';
+    component.selectedDuration = 60;
+    component.startTest();
+    expect(testActionServiceSpy.emitFilter).toHaveBeenCalledWith({
+      difficultyLevel: 'hard',
+      duration: 60,
     });
     expect(routerSpy.navigateByUrl).toHaveBeenCalledWith('test');
   });
