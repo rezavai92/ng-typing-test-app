@@ -2,8 +2,6 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { TestStarterCardComponent } from './test-starter-card.component';
 import { Router } from '@angular/router';
 import { TestActionService } from '../../services/test-action.service';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { of } from 'rxjs';
 import { TypeTestArtifactsModule } from '../../type-test-artifacts/type-test-artifacts.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DebugElement } from '@angular/core';

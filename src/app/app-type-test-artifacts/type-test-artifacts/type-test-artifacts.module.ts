@@ -44,15 +44,6 @@ import { TestLandingPageComponent } from '../components/test-landing-page/test-l
     TextHighlighterDirective,
     MatCardActions,
     MatDividerModule,
-    //  MatCardModule,
-    // MatButtonModule,
-    // MatFormFieldModule,
-    //MatSelectModule,
-    //MatInputModule,
-    //FormsModule,
-    //MatIconModule,
-    //CommonModule,
-    //ReactiveFormsModule,
   ],
 })
 export class TypeTestArtifactsModule {}

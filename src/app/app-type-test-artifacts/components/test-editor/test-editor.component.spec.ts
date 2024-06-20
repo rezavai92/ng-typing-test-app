@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { TestEditorComponent } from './test-editor.component';
 import { TypeTestArtifactsModule } from '../../type-test-artifacts/type-test-artifacts.module';
 
