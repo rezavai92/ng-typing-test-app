@@ -18,8 +18,6 @@ export class TestStarterCardComponent {
 
   selectedDifficultyLevel: difficultyLevel = 'easy';
   selectedDuration = 30;
-  durationFormControl!: FormControl;
-  difficultyFormControl!: FormControl;
 
   constructor(private _router: Router, public testAction: TestActionService) {}
 
