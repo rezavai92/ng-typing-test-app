@@ -227,6 +227,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   handlePermittedKeys(e: KeyboardEvent) {
     let key = this.getEditorKeyFromInput(e.key);
+
     const keyHandletrategyContext = new InputKeyHandlerStrategyContext(
       key,
       this.testModel
@@ -234,8 +235,9 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     const keyHandleStrategy = keyHandletrategyContext.getStrategy();
 
     if (keyHandleStrategy) {
+      let actualKey = key == EditorKeys.SingleChar ? e.key : key;
       keyHandleStrategy.handleKey(
-        key,
+        actualKey,
         this.normalViewConfig,
         this.getKeyEventCallback(e.key)
       );
