@@ -132,6 +132,7 @@
           <div class="mt-2 pro-wrapper">
             <mat-form-field class="w-full white-bg">
               <textarea
+                wrap="hard"
                 spellcheck="false"
                 (copy)="(false)"
                 (cut)="(false)"
@@ -143,14 +144,18 @@
                 (mousedown)="(false)"
                 class="font-medium para prevent-select select-none"
                 matInput
-                style="word-spacing: 0.6rem; color: white; line-height: 20px"
+                style="
+                  word-spacing: 0.6rem;
+                  color: white;
+                  line-height: 36px !important;
+                "
               ></textarea>
             </mat-form-field>
-            <div class="pro-container h-full">
+            <div class="pro-container overflow-y-hidden">
               @for (item of normalViewConfig().typedlines[0]?.split('\n'); track
               $index) {
               <div
-                class="mb-3"
+                class="mb-4"
                 *ngIf="$index >= normalViewConfig().currentParaIndex - 1"
               >
                 <span

@@ -293,17 +293,36 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  shouldPreventSingleCharKey(config: INormalViewConfig) {
+    let ind = config.currentParaIndex;
+
+    let typedLines =
+      this.selectedMode() == 'basic'
+        ? config.typedlines
+        : config.typedlines.length > 0
+        ? config.typedlines[0]?.split('\n')
+        : [];
+
+    return typedLines && typedLines[ind]?.length > 44;
+  }
+
   isPreventableKey(key: string) {
     const config = this.normalViewConfig();
+
     const preventableSpaceKey =
       key == EditorKeys.Space && this.shouldPreventSpaceKey(config);
     const preventableEnterKey =
       key == EditorKeys.Enter && this.shouldPreventEnterKey(config);
     const preventableBackspaceKey =
       key == EditorKeys.Backspace && this.shouldPreventBackspaceKey(config);
+    const preventableSingleCharKey =
+      key.length == 1 && this.shouldPreventSingleCharKey(config);
 
     return (
-      preventableSpaceKey || preventableEnterKey || preventableBackspaceKey
+      preventableSpaceKey ||
+      preventableEnterKey ||
+      preventableBackspaceKey ||
+      preventableSingleCharKey
     );
   }
   startTyping(e: KeyboardEvent, i: number) {

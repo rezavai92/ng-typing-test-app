@@ -35,7 +35,9 @@ export class ScoreReporter {
     let totalWords = this._testModel.Paragraph.Pro.split(' ').length;
     filledUpLines = filledUpLines.filter((x) => x != null);
     if (this._testModel.Mode == 'pro') {
-      filledUpLines = filledUpLines[0].split('\n');
+      filledUpLines = filledUpLines[0].split('\n').map((x) => x.trim());
+    } else {
+      filledUpLines = filledUpLines.map((x) => x.trim());
     }
     let { totalCorrect, totalMistypes } = filledUpLines.reduce(
       (a, b, index) => {

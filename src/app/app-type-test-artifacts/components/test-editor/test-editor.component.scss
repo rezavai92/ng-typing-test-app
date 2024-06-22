@@ -52,12 +52,13 @@
 }
 
 .pro-wrapper {
+  overflow-y: hidden !important;
   .pro-container {
     transform: translateY(-100px);
     //   height: 100px;
     font-size: 20px;
-    word-spacing: 0.7rem;
-    overflow-y: hidden;
+    word-spacing: 0.6rem;
+
     .split-word {
       margin-right: 0.6px;
     }
