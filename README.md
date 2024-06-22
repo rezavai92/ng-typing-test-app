@@ -6,15 +6,23 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 1. **Start Test**
    <br>
+ 
    ![Start Test](https://github.com/rezavai92/ng-typing-test-app/assets/47608395/0419b0a5-ebb7-4432-bace-c4db9b1d896a)
    <br><br>
 
 2. **The Text Editor**
    <br>
-   ![The Text Editor](https://github.com/rezavai92/ng-typing-test-app/assets/47608395/a56e8409-25d1-4cb3-a323-398b5a003bfd)
+     <br>
+   **Basic mode**
+   ![Basic mode](https://github.com/rezavai92/ng-typing-test-app/assets/47608395/1b947baf-0ed8-4e84-b6bf-0092c72f9c4c)
+    <br>   <br>  <br>
+    **Pro mode**
+   ![Pro mode](https://github.com/rezavai92/ng-typing-test-app/assets/47608395/d4006060-ae51-4d55-a2c2-ceff9f21271b)
+
+ 
    <br><br>
 
-3. **Score Card**
+4. **Score Card**
    <br>
    ![Score Card](https://github.com/rezavai92/ng-typing-test-app/assets/47608395/0dfe5118-b4a3-4693-a945-a876807c30dd)
    <br>
