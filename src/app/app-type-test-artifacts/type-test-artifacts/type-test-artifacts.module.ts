@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardActions, MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,6 +29,7 @@ import { TestLandingPageComponent } from '../components/test-landing-page/test-l
   imports: [
     CommonModule,
     MatCardModule,
+    MatButtonToggleModule,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,

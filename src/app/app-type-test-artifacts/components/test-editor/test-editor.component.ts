@@ -22,6 +22,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ViewResultComponent } from '../view-result/view-result.component';
 import { EditorKeys } from '../../../app-shared/constants/keyboardData';
 import { InputKeyHandlerStrategyContext } from '../../models/contexts/KeyHandlerStrategyContext';
+import { MatButtonToggleChange } from '@angular/material/button-toggle';
+import { sign } from 'crypto';
 
 export interface INormalViewConfig {
   currentParaIndex: number;
@@ -31,6 +33,12 @@ export interface INormalViewConfig {
   wordStack: string[];
   typedlines: string[];
   TotalPara: number;
+}
+
+export interface IProViewConfig {
+  currentWordIndex: number;
+  wordStack: string[];
+  currentTypedWord: string;
 }
 @Component({
   selector: 'app-test-editor',
@@ -54,12 +62,20 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     TotalPara: 0,
   });
 
+  proViewConfig: WritableSignal<IProViewConfig> = signal({
+    currentWordIndex: 0,
+    wordStack: [],
+    currentTypedWord: ' ',
+  });
+
   resultLoading = false;
   typedLines = computed(() => {
     let config = this.normalViewConfig();
 
     return config.typedlines;
   });
+
+  selectedMode = signal('basic');
   @ViewChildren('paragraph') normalViewIndividualParas!: QueryList<ElementRef>;
   constructor(
     private _typeTestService: TypeTestService,
@@ -287,6 +303,12 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     let targetInput: any = e?.target;
     config.typedlines[i] = targetInput.value;
     this.normalViewConfig.update((item) => ({ ...config }));
+  }
+
+  onModeChange(event: MatButtonToggleChange) {
+    this.selectedMode.set(event.source.value);
+    this.filter.mode = this.selectedMode();
+    this.testAction.emitFilter(this.filter);
   }
   ngOnDestroy(): void {
     this.timerSubscription?.unsubscribe();

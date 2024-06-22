@@ -24,6 +24,14 @@
     // word-spacing: 0.5rem;
   }
 }
+.pro-view {
+  .para {
+    //  max-height: 250px;
+    //  overflow-y: hidden;
+
+    font-size: 20px;
+  }
+}
 
 .prevent-select {
   -webkit-touch-callout: none; /* iOS Safari */
@@ -61,5 +69,14 @@
   }
   .mat-mdc-form-field-focus-overlay {
     background-color: white;
+  }
+
+  .mat-button-toggle {
+    height: 40px; /* Change this value to your desired height */
+    //  line-height: 40px; /* Ensures text is vertically centered */
+  }
+
+  .mat-button-toggle-label-content {
+    line-height: 40px !important;
   }
 }
