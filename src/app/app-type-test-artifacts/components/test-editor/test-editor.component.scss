@@ -30,6 +30,7 @@
     //  overflow-y: hidden;
 
     font-size: 20px;
+    line-height: 28px !important;
   }
 }
 
@@ -50,15 +51,18 @@
   color: red;
 }
 
-.pro-container {
-  transform: translateY(-45px);
-
-  font-size: 20px;
-  word-spacing: 0.6rem;
-  .split-word {
-    margin-right: 0.6px;
+.pro-wrapper {
+  .pro-container {
+    transform: translateY(-86px);
+    //   height: 100px;
+    font-size: 20px;
+    word-spacing: 0.7rem;
+    .split-word {
+      margin-right: 0.6px;
+    }
   }
 }
+
 .input-form-field {
   position: relative;
   .value-container {

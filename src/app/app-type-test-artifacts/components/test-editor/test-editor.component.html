@@ -129,7 +129,7 @@
               </p>
             </div>
           </div>
-          <div class="mt-2">
+          <div class="mt-2 pro-wrapper">
             <mat-form-field class="w-full white-bg">
               <textarea
                 spellcheck="false"
@@ -143,30 +143,31 @@
                 (mousedown)="(false)"
                 class="font-medium para prevent-select select-none"
                 matInput
-                style="word-spacing: 0.6rem; color: white; line-height: 24px"
+                style="word-spacing: 0.6rem; color: white; line-height: 1"
               ></textarea>
-
-              <div class="pro-container">
-                @for (item of normalViewConfig().typedlines[0]?.split('\n');
-                track $index) {
-                <p
-                  *ngIf="$index >= normalViewConfig().currentParaIndex - 1"
-                  class="mb-2"
-                >
-                  <span
-                    *ngFor="let word of item?.split(' '); let j = index"
-                    [ngClass]="{
-                      redHighlight:
-                        item.split(' ')[j] != word &&
-                        this.normalViewConfig().currentWordIndex > j &&
-                        this.normalViewConfig().currentParaIndex == 0
-                    }"
-                    >{{ word }}
-                  </span>
-                </p>
-                }
-              </div>
             </mat-form-field>
+            <div class="pro-container h-full">
+              @for (item of normalViewConfig().typedlines[0]?.split('\n'); track
+              $index) {
+              <div
+                class="mb-2"
+                *ngIf="$index >= normalViewConfig().currentParaIndex - 1"
+              >
+                <span
+                  *ngFor="let word of item?.split(' '); let j = index"
+                  [ngClass]="{
+                    redHighlight:
+                      this.testModel.Paragraph.Normal[
+                        this.normalViewConfig().currentParaIndex
+                      ].split(' ')[j] != word &&
+                      this.normalViewConfig().currentWordIndex > j &&
+                      this.normalViewConfig().currentParaIndex == $index
+                  }"
+                  >{{ word }}
+                </span>
+              </div>
+              }
+            </div>
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ export class BackspaceKeyHandleStrategy extends InputKeyHandleStrategy {
     callback: Function | null
   ): void {
     let config = configSignal();
-    debugger;
+
     config.currentTypedWord = config.currentTypedWord.slice(
       0,
       config.currentTypedWord.length - 1
