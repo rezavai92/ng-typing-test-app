@@ -8,8 +8,8 @@
     </mat-card-header>
     <mat-card-content>
       <!--Duration-->
-      <div class="mt-4 flex-row justify-center items-center">
-        <mat-form-field class="filter-dd-width mr-4">
+      <div class="mt-4 max-md:flex-col flex justify-center items-center">
+        <mat-form-field class="max-md:w-full md:mr-4 md:w-2/4">
           <mat-label>
             <mat-icon>timer</mat-icon>
           </mat-label>
@@ -24,7 +24,7 @@
 
         <!--Difficulty level-->
 
-        <mat-form-field class="filter-dd-width">
+        <mat-form-field class="max-md:w-full md:w-2/4">
           <mat-label>
             <mat-icon>description</mat-icon>
           </mat-label>
@@ -38,7 +38,7 @@
         </mat-form-field>
       </div>
     </mat-card-content>
-    <mat-card-actions class="flex-row justify-center">
+    <mat-card-actions class="flex-row justify-center mb-4">
       <button color="primary" (click)="startTest()" mat-raised-button>
         Start Test
       </button>
