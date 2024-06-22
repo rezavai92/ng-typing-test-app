@@ -23,7 +23,7 @@ import { ViewResultComponent } from '../view-result/view-result.component';
 import { EditorKeys } from '../../../app-shared/constants/keyboardData';
 import { InputKeyHandlerStrategyContext } from '../../models/contexts/KeyHandlerStrategyContext';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { sign } from 'crypto';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export interface INormalViewConfig {
   currentParaIndex: number;
@@ -87,7 +87,8 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     public testAction: TestActionService,
     public router: Router,
     public dialog: MatDialog,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private _snackbar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
@@ -128,6 +129,16 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const typedLines: string[] = new Array(
           this.testModel.Paragraph.Normal.length
         );
+        if (this.filter.mode == 'mobile') {
+          this._snackbar.open(
+            'Please test with a PC! We  will provide this feature for the mobile devices soon.',
+            'Close',
+            {
+              duration: 5000,
+            }
+          );
+          return;
+        }
 
         this.normalViewConfig.update((config) => {
           return {
@@ -149,6 +160,9 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   startTest() {
+    if (this.filter.mode == 'mobile') {
+      return;
+    }
     this.testModel.Status = 'running';
     this.timerSubscription = interval(1000)
       .pipe(take(this.testModel.TestTime), takeUntil(this.destroy$))

@@ -21,7 +21,7 @@ export class TestStarterCardComponent {
     this.testAction.emitFilter({
       difficultyLevel: this.selectedDifficultyLevel,
       duration: this.selectedDuration,
-      mode: 'basic',
+      mode: this.testAction.detectMode(),
     });
 
     this._router.navigateByUrl('test');

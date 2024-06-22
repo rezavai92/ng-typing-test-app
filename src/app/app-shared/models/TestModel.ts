@@ -12,7 +12,7 @@ export class TestModel {
   Difficulty!: difficultyLevel;
   Status!: 'running' | 'finished' | 'waiting';
   Result!: ITestModelResult;
-  Mode!: 'basic' | 'pro';
+  Mode!: 'basic' | 'pro' | 'mobile';
   constructor(
     paragraph: ITestParagraph,
 

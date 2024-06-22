@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ITestModelFilter } from '../interfaces/ITestModelFilter.interface';
 import { BehaviorSubject } from 'rxjs';
+import { UtilityService } from '../../app-shared/services/utility.service';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 export class TestActionService {
   testTriggered: BehaviorSubject<ITestModelFilter | null> =
     new BehaviorSubject<ITestModelFilter | null>(null);
-  constructor() {}
+  constructor(private _utilityService: UtilityService) {}
 
   clearFilter() {
     this.testTriggered.complete();
@@ -16,5 +17,10 @@ export class TestActionService {
 
   emitFilter(filter: ITestModelFilter) {
     this.testTriggered.next(filter);
+  }
+
+  detectMode() {
+    if (this._utilityService.isMobile()) return 'mobile';
+    return 'basic';
   }
 }
