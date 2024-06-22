@@ -1,6 +1,8 @@
 # NgTypingTestApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.
+
+[Windows only, This app might not work properly in mobile device and macbook]
 
 **Live Link:** https://ng-typing-test-app.vercel.app/
 
