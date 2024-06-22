@@ -7,11 +7,10 @@ import { TypeTestArtifactsModule } from './app-type-test-artifacts/type-test-art
   selector: 'app-root',
   standalone: true,
   imports: [
-    RouterOutlet,
     RouterLink,
-    MatIconModule,
-    MatToolbarModule,
+    RouterOutlet,
     TypeTestArtifactsModule,
+    MatToolbarModule,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',

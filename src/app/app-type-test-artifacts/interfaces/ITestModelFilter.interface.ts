@@ -3,5 +3,5 @@ import { difficultyLevel } from '../types/common.types';
 export interface ITestModelFilter {
   difficultyLevel: difficultyLevel;
   duration: number;
-  mode: string;
+  mode: 'basic' | 'pro';
 }

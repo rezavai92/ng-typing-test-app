@@ -7,4 +7,7 @@ export enum EditorKeys {
   Space = ' ',
   Enter = 'Enter',
   SingleChar = 'SingleChar',
+  Shift = 'Shift',
+  Alt = 'Alt',
+  Blank = '',
 }

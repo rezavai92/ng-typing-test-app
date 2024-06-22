@@ -33,6 +33,7 @@ export interface INormalViewConfig {
   wordStack: string[];
   typedlines: string[];
   TotalPara: number;
+  testModel: TestModel | null;
 }
 
 export interface IProViewConfig {
@@ -60,6 +61,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     wordStack: [],
     typedlines: [],
     TotalPara: 0,
+    testModel: null,
   });
 
   proViewConfig: WritableSignal<IProViewConfig> = signal({
@@ -75,8 +77,11 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     return config.typedlines;
   });
 
-  selectedMode = signal('basic');
+  currentProModeLineIndex = 0;
+
+  selectedMode: WritableSignal<'basic' | 'pro'> = signal('basic');
   @ViewChildren('paragraph') normalViewIndividualParas!: QueryList<ElementRef>;
+  @ViewChildren('proViewParagraph') proViewPara!: QueryList<ElementRef>;
   constructor(
     private _typeTestService: TypeTestService,
     public testAction: TestActionService,
@@ -118,6 +123,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
         const cloned = JSON.parse(JSON.stringify(res[0])) as TestModel;
         this.testModel = new TestModel(cloned.Paragraph, cloned.Difficulty);
         this.testModel.TestTime = this.filter.duration;
+        this.testModel.Mode = this.filter.mode;
         this.remainingTime = this.testModel.TestTime;
         const typedLines: string[] = new Array(
           this.testModel.Paragraph.Normal.length
@@ -132,6 +138,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
               ).length,
             TotalPara: this.testModel.Paragraph.Normal.length,
             typedlines: typedLines,
+            testModel: this.testModel,
           };
         });
       });
@@ -157,7 +164,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   viewResult() {
     this.resultLoading = true;
-
+    console.log('final config', this.normalViewConfig());
     setTimeout(() => {
       this.resultLoading = false;
       const resultModalRef = this.dialog.open(ViewResultComponent, {
@@ -191,6 +198,14 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   focusNextPara() {
+    if (this.selectedMode() == 'pro') {
+      this.proViewPara.forEach((x, index) => {
+        if (index == this.normalViewConfig().currentParaIndex) {
+          x.nativeElement.querySelector('textarea').focus();
+        }
+      });
+      return;
+    }
     this.normalViewIndividualParas.forEach((x, index) => {
       if (index == this.normalViewConfig().currentParaIndex) {
         x.nativeElement.querySelector('input').focus();
@@ -217,7 +232,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     const noCharacterInCurrentLine =
       config.currentWordIndex == 0 && config.currentTypedWord == ' ';
 
-    return noCharacterInCurrentLine;
+    return this.selectedMode() == 'basic' && noCharacterInCurrentLine;
   }
 
   getEditorKeyFromInput(key: string): EditorKeys {
@@ -229,6 +244,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       EditorKeys.ArrowRight,
       EditorKeys.ArrowUp,
       EditorKeys.Enter,
+      EditorKeys.Shift,
     ];
 
     return (
@@ -241,9 +257,14 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     return null;
   }
 
+  formatKey(key: EditorKeys) {
+    if (key == EditorKeys.Shift) return EditorKeys.Blank;
+    return key;
+  }
+
   handlePermittedKeys(e: KeyboardEvent) {
     let key = this.getEditorKeyFromInput(e.key);
-
+    key = this.formatKey(key);
     const keyHandletrategyContext = new InputKeyHandlerStrategyContext(
       key,
       this.testModel
@@ -309,6 +330,9 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.selectedMode.set(event.source.value);
     this.filter.mode = this.selectedMode();
     this.testAction.emitFilter(this.filter);
+    this.cdr.detectChanges();
+    this.focusNextPara();
+    // this.cdr.detectChanges();
   }
   ngOnDestroy(): void {
     this.timerSubscription?.unsubscribe();

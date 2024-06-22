@@ -12,6 +12,7 @@ export class TestModel {
   Difficulty!: difficultyLevel;
   Status!: 'running' | 'finished' | 'waiting';
   Result!: ITestModelResult;
+  Mode!: 'basic' | 'pro';
   constructor(
     paragraph: ITestParagraph,
 
@@ -21,5 +22,6 @@ export class TestModel {
 
     this.Difficulty = difficulty;
     this.Status = 'waiting';
+    this.Mode = 'basic';
   }
 }

@@ -26,6 +26,7 @@
           Close
         </button>
       </div>
+      <!--Basic Mode-->
       <div
         *ngIf="!this.resultLoading && this.selectedMode() == 'basic'"
         #normalViewScreen
@@ -100,6 +101,8 @@
           </mat-form-field>
         </div>
       </div>
+      <!--Basic Mode Ends-->
+
       <!--Pro Mode-->
       <div
         *ngIf="!this.resultLoading && selectedMode() == 'pro'"
@@ -108,7 +111,10 @@
         <div class="prevent-select" #proViewParagraph>
           <div class="max-h-48 overflow-y-hidden">
             <div *ngFor="let para of testModel.Paragraph.Normal; let i = index">
-              <p class="para font-medium">
+              <p
+                *ngIf="i >= normalViewConfig().currentParaIndex - 3"
+                class="para font-medium"
+              >
                 @for (item of para.split(' '); track $index) {
                 <span
                   [ngClass]="
@@ -123,8 +129,8 @@
               </p>
             </div>
           </div>
-          <div class="mt-4">
-            <mat-form-field class="w-full white-bg input-form-field">
+          <div class="mt-2">
+            <mat-form-field class="w-full white-bg">
               <textarea
                 spellcheck="false"
                 (copy)="(false)"
@@ -137,29 +143,34 @@
                 (mousedown)="(false)"
                 class="font-medium para prevent-select select-none"
                 matInput
+                style="word-spacing: 0.6rem; color: white; line-height: 24px"
               ></textarea>
+
+              <div class="pro-container">
+                @for (item of normalViewConfig().typedlines[0]?.split('\n');
+                track $index) {
+                <p
+                  *ngIf="$index >= normalViewConfig().currentParaIndex - 1"
+                  class="mb-2"
+                >
+                  <span
+                    *ngFor="let word of item?.split(' '); let j = index"
+                    [ngClass]="{
+                      redHighlight:
+                        item.split(' ')[j] != word &&
+                        this.normalViewConfig().currentWordIndex > j &&
+                        this.normalViewConfig().currentParaIndex == 0
+                    }"
+                    >{{ word }}
+                  </span>
+                </p>
+                }
+              </div>
             </mat-form-field>
           </div>
-
-          <!-- <ng-container>
-            <div class="value-container">
-              <span
-                *ngFor="let word of typedLines()[i]?.split(' '); let j = index"
-                [ngClass]="{
-                  redHighlight:
-                    this.testModel.Paragraph.Normal[
-                      this.normalViewConfig().currentParaIndex
-                    ].split(' ')[j] != word &&
-                    this.normalViewConfig().currentWordIndex > j &&
-                    this.normalViewConfig().currentParaIndex == i
-                }"
-                >{{ word }}
-              </span>
-            </div>
-          </ng-container> -->
         </div>
       </div>
-
+      <!--Pro Mode Ends-->
       <div
         class="h-full flex justify-center items-center"
         *ngIf="this.resultLoading"
