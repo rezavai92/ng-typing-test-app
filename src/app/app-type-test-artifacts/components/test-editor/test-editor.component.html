@@ -143,19 +143,21 @@
                 (mousedown)="(false)"
                 class="font-medium para prevent-select select-none"
                 matInput
-                style="word-spacing: 0.6rem; color: white; line-height: 1"
+                style="word-spacing: 0.6rem; color: white; line-height: 20px"
               ></textarea>
             </mat-form-field>
             <div class="pro-container h-full">
               @for (item of normalViewConfig().typedlines[0]?.split('\n'); track
               $index) {
               <div
-                class="mb-2"
+                class="mb-3"
                 *ngIf="$index >= normalViewConfig().currentParaIndex - 1"
               >
                 <span
                   *ngFor="let word of item?.split(' '); let j = index"
                   [ngClass]="{
+                    disabledLine:
+                      this.normalViewConfig().currentParaIndex != $index,
                     redHighlight:
                       this.testModel.Paragraph.Normal[
                         this.normalViewConfig().currentParaIndex

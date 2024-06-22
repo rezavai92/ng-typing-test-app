@@ -30,7 +30,7 @@
     //  overflow-y: hidden;
 
     font-size: 20px;
-    line-height: 28px !important;
+    line-height: 36px !important;
   }
 }
 
@@ -53,10 +53,11 @@
 
 .pro-wrapper {
   .pro-container {
-    transform: translateY(-86px);
+    transform: translateY(-100px);
     //   height: 100px;
     font-size: 20px;
     word-spacing: 0.7rem;
+    overflow-y: hidden;
     .split-word {
       margin-right: 0.6px;
     }
@@ -91,5 +92,9 @@
 
   .mat-button-toggle-label-content {
     line-height: 40px !important;
+  }
+
+  .disabledLine {
+    color: gray;
   }
 }

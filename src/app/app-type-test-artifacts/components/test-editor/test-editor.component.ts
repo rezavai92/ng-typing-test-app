@@ -232,7 +232,11 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     const noCharacterInCurrentLine =
       config.currentWordIndex == 0 && config.currentTypedWord == ' ';
 
-    return this.selectedMode() == 'basic' && noCharacterInCurrentLine;
+    return this.selectedMode() == 'basic'
+      ? noCharacterInCurrentLine
+      : config.currentParaIndex == 0 &&
+          config.currentTypedWord == ' ' &&
+          config.currentWordIndex == 0;
   }
 
   getEditorKeyFromInput(key: string): EditorKeys {
