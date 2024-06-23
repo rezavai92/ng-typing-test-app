@@ -1,5 +1,5 @@
 import { WritableSignal } from '@angular/core';
-import { INormalViewConfig } from '../../components/test-editor/test-editor.component';
+import { IEditorViewConfig } from '../../components/test-editor/test-editor.component';
 import { InputKeyHandleStrategy } from './InputKeyHandleStrategy';
 import { EditorKeys } from '../../../app-shared/constants/keyboardData';
 import { TestModel } from '../../../app-shared/models/TestModel';
@@ -10,7 +10,7 @@ export class EnterKeyHandleStrategy extends InputKeyHandleStrategy {
   }
   override handleKey(
     key: string,
-    configSignal: WritableSignal<INormalViewConfig>,
+    configSignal: WritableSignal<IEditorViewConfig>,
     callback: Function
   ): void {
     const config = configSignal();

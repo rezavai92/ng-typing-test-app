@@ -31,7 +31,6 @@ export class ScoreReporter {
   }
 
   evaluateScore(filledUpLines: string[]) {
-    console.log('filled up lines', filledUpLines);
     let totalWords = this._testModel.Paragraph.Pro.split(' ').length;
     filledUpLines = filledUpLines.filter((x) => x != null);
     if (this._testModel.Mode == 'pro') {

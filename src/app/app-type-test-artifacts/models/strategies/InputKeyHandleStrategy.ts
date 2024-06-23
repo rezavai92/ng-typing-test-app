@@ -1,5 +1,5 @@
 import { WritableSignal } from '@angular/core';
-import { INormalViewConfig } from '../../components/test-editor/test-editor.component';
+import { IEditorViewConfig } from '../../components/test-editor/test-editor.component';
 import { TestModel } from '../../../app-shared/models/TestModel';
 
 export abstract class InputKeyHandleStrategy {
@@ -7,7 +7,7 @@ export abstract class InputKeyHandleStrategy {
 
   abstract handleKey(
     key: string,
-    configSignal: WritableSignal<INormalViewConfig>,
+    configSignal: WritableSignal<IEditorViewConfig>,
     callback: Function | null
   ): void;
 }

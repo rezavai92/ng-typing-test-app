@@ -3,19 +3,19 @@
     <mat-card class="screen px-8">
       <div class="flex justify-between items-center">
         <div class="flex justify-center items-center">
-          <button class="w-2" disabled style="font-size: 16px" mat-icon-button>
+          <button class="w-2 text-base" disabled mat-icon-button>
             <mat-icon>timer</mat-icon> &nbsp;
           </button>
 
-          <button style="margin-left: -14px" class="w-2" mat-button disabled>
+          <button class="-ml-3 w-2" mat-button disabled>
             {{ remainingTime | timerFormat }}
           </button>
         </div>
         <mat-button-toggle-group
           (change)="onModeChange($event)"
-          name="fontStyle"
+          name="testMode"
           [value]="this.selectedMode()"
-          aria-label="Font Style"
+          aria-label="Test Mode"
           [disabled]="testModel.Status == 'running'"
         >
           <mat-button-toggle value="basic">Basic</mat-button-toggle>
@@ -38,14 +38,14 @@
           *ngFor="let para of testModel.Paragraph.Normal; let i = index"
         >
           <p
-            *ngIf="i >= this.normalViewConfig().currentParaIndex"
+            *ngIf="i >= this.editorViewConfig().currentParaIndex"
             class="para font-medium"
           >
             @for (item of para.split(' '); track $index) {
             <span
               [ngClass]="
-                normalViewConfig().currentParaIndex == i &&
-                normalViewConfig().currentWordIndex == $index
+                editorViewConfig().currentParaIndex == i &&
+                editorViewConfig().currentWordIndex == $index
                   ? 'highlight'
                   : ''
               "
@@ -55,12 +55,12 @@
           </p>
 
           <mat-form-field
-            *ngIf="i >= this.normalViewConfig().currentParaIndex"
+            *ngIf="i >= this.editorViewConfig().currentParaIndex"
             class="w-full white-bg input-form-field"
           >
             <ng-container>
               <!-- <span
-                *ngFor="let str of normalViewConfig().typedlines[i]?.split(' ')"
+                *ngFor="let str of editorViewConfig().typedlines[i]?.split(' ')"
               >
                 {{ str }}
               </span> -->
@@ -73,10 +73,10 @@
                   [ngClass]="{
                     redHighlight:
                       this.testModel.Paragraph.Normal[
-                        this.normalViewConfig().currentParaIndex
+                        this.editorViewConfig().currentParaIndex
                       ].split(' ')[j] != word &&
-                      this.normalViewConfig().currentWordIndex > j &&
-                      this.normalViewConfig().currentParaIndex == i
+                      this.editorViewConfig().currentWordIndex > j &&
+                      this.editorViewConfig().currentParaIndex == i
                   }"
                   >{{ word }}
                 </span>
@@ -85,7 +85,7 @@
 
             <input
               spellcheck="false"
-              [readonly]="normalViewConfig().currentParaIndex != i"
+              [readonly]="editorViewConfig().currentParaIndex != i"
               (copy)="(false)"
               (cut)="(false)"
               (paste)="(false)"
@@ -94,8 +94,7 @@
               (selectstart)="(false)"
               (keydown)="startTyping($event, i)"
               (mousedown)="(false)"
-              class="select-none para font-medium prevent-select"
-              style="word-spacing: 0.6rem; color: white"
+              class="input select-none para font-medium prevent-select"
               matInput
             />
           </mat-form-field>
@@ -112,14 +111,14 @@
           <div class="max-h-48 overflow-y-hidden">
             <div *ngFor="let para of testModel.Paragraph.Normal; let i = index">
               <p
-                *ngIf="i >= normalViewConfig().currentParaIndex - 3"
+                *ngIf="i >= editorViewConfig().currentParaIndex - 3"
                 class="para font-medium"
               >
                 @for (item of para.split(' '); track $index) {
                 <span
                   [ngClass]="
-                    normalViewConfig().currentParaIndex == i &&
-                    normalViewConfig().currentWordIndex == $index
+                    editorViewConfig().currentParaIndex == i &&
+                    editorViewConfig().currentWordIndex == $index
                       ? 'highlight'
                       : ''
                   "
@@ -152,23 +151,23 @@
               ></textarea>
             </mat-form-field>
             <div class="pro-container overflow-y-hidden">
-              @for (item of normalViewConfig().typedlines[0]?.split('\n'); track
+              @for (item of editorViewConfig().typedlines[0]?.split('\n'); track
               $index) {
               <div
                 class="mb-4"
-                *ngIf="$index >= normalViewConfig().currentParaIndex - 1"
+                *ngIf="$index >= editorViewConfig().currentParaIndex - 1"
               >
                 <span
                   *ngFor="let word of item?.split(' '); let j = index"
                   [ngClass]="{
                     disabledLine:
-                      this.normalViewConfig().currentParaIndex != $index,
+                      this.editorViewConfig().currentParaIndex != $index,
                     redHighlight:
                       this.testModel.Paragraph.Normal[
-                        this.normalViewConfig().currentParaIndex
+                        this.editorViewConfig().currentParaIndex
                       ].split(' ')[j] != word &&
-                      this.normalViewConfig().currentWordIndex > j &&
-                      this.normalViewConfig().currentParaIndex == $index
+                      this.editorViewConfig().currentWordIndex > j &&
+                      this.editorViewConfig().currentParaIndex == $index
                   }"
                   >{{ word }}
                 </span>

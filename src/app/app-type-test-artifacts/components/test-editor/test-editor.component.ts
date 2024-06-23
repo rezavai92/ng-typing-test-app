@@ -25,7 +25,7 @@ import { InputKeyHandlerStrategyContext } from '../../models/contexts/KeyHandler
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-export interface INormalViewConfig {
+export interface IEditorViewConfig {
   currentParaIndex: number;
   currentWordIndex: number;
   currentParaWordCount: number;
@@ -36,11 +36,6 @@ export interface INormalViewConfig {
   testModel: TestModel | null;
 }
 
-export interface IProViewConfig {
-  currentWordIndex: number;
-  wordStack: string[];
-  currentTypedWord: string;
-}
 @Component({
   selector: 'app-test-editor',
   standalone: false,
@@ -53,7 +48,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   destroy$: Subject<any> = new Subject();
   timerSubscription!: Subscription;
   remainingTime!: number;
-  normalViewConfig: WritableSignal<INormalViewConfig> = signal({
+  editorViewConfig: WritableSignal<IEditorViewConfig> = signal({
     currentParaIndex: 0,
     currentWordIndex: 0,
     currentParaWordCount: 0,
@@ -64,15 +59,9 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     testModel: null,
   });
 
-  proViewConfig: WritableSignal<IProViewConfig> = signal({
-    currentWordIndex: 0,
-    wordStack: [],
-    currentTypedWord: ' ',
-  });
-
   resultLoading = false;
   typedLines = computed(() => {
-    let config = this.normalViewConfig();
+    let config = this.editorViewConfig();
 
     return config.typedlines;
   });
@@ -134,13 +123,13 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
             'Please test with a PC! We  will provide this feature for the mobile devices soon.',
             'Close',
             {
-              duration: 5000,
+              duration: 10000,
             }
           );
           return;
         }
 
-        this.normalViewConfig.update((config) => {
+        this.editorViewConfig.update((config) => {
           return {
             ...config,
             currentParaWordCount:
@@ -178,7 +167,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
 
   viewResult() {
     this.resultLoading = true;
-    console.log('final config', this.normalViewConfig());
+
     setTimeout(() => {
       this.resultLoading = false;
       const resultModalRef = this.dialog.open(ViewResultComponent, {
@@ -212,29 +201,27 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   focusNextPara() {
-    if (this.selectedMode() == 'pro') {
-      this.proViewPara.forEach((x, index) => {
-        if (index == this.normalViewConfig().currentParaIndex) {
-          x.nativeElement.querySelector('textarea').focus();
-        }
-      });
-      return;
-    }
-    this.normalViewIndividualParas.forEach((x, index) => {
-      if (index == this.normalViewConfig().currentParaIndex) {
-        x.nativeElement.querySelector('input').focus();
+    let querySelector = this.selectedMode() == 'pro' ? 'textarea' : 'input';
+    let elemRef =
+      this.selectedMode() == 'pro'
+        ? this.proViewPara
+        : this.normalViewIndividualParas;
+
+    elemRef.forEach((x, index) => {
+      if (index == this.editorViewConfig().currentParaIndex) {
+        x.nativeElement.querySelector(querySelector).focus();
       }
     });
   }
 
-  shouldPreventEnterKey(config: INormalViewConfig) {
+  shouldPreventEnterKey(config: IEditorViewConfig) {
     return (
       config.currentWordIndex < config.currentParaWordCount - 1 ||
-      config.currentTypedWord == ' '
+      config.currentTypedWord == EditorKeys.Space
     );
   }
 
-  shouldPreventSpaceKey(config: INormalViewConfig) {
+  shouldPreventSpaceKey(config: IEditorViewConfig) {
     let reachedLastWord =
       config.currentWordIndex >= config.currentParaWordCount - 1;
     let noWordTypedInCurrentIndex = config.currentTypedWord == EditorKeys.Space;
@@ -242,14 +229,14 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     return reachedLastWord || noWordTypedInCurrentIndex;
   }
 
-  shouldPreventBackspaceKey(config: INormalViewConfig) {
+  shouldPreventBackspaceKey(config: IEditorViewConfig) {
     const noCharacterInCurrentLine =
       config.currentWordIndex == 0 && config.currentTypedWord == ' ';
 
     return this.selectedMode() == 'basic'
       ? noCharacterInCurrentLine
       : config.currentParaIndex == 0 &&
-          config.currentTypedWord == ' ' &&
+          config.currentTypedWord == EditorKeys.Space &&
           config.currentWordIndex == 0;
   }
 
@@ -293,7 +280,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
       let actualKey = key == EditorKeys.SingleChar ? e.key : key;
       keyHandleStrategy.handleKey(
         actualKey,
-        this.normalViewConfig,
+        this.editorViewConfig,
         this.getKeyEventCallback(e.key)
       );
     }
@@ -307,7 +294,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  shouldPreventSingleCharKey(config: INormalViewConfig) {
+  shouldPreventSingleCharKey(config: IEditorViewConfig) {
     let ind = config.currentParaIndex;
 
     let typedLines =
@@ -321,7 +308,7 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   isPreventableKey(key: string) {
-    const config = this.normalViewConfig();
+    const config = this.editorViewConfig();
 
     const preventableSpaceKey =
       key == EditorKeys.Space && this.shouldPreventSpaceKey(config);
@@ -357,10 +344,10 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   updateTypedLines(e: KeyboardEvent, i: number) {
-    const config = this.normalViewConfig();
+    const config = this.editorViewConfig();
     let targetInput: any = e?.target;
     config.typedlines[i] = targetInput.value;
-    this.normalViewConfig.update((item) => ({ ...config }));
+    this.editorViewConfig.update((item) => ({ ...config }));
   }
 
   onModeChange(event: MatButtonToggleChange) {
@@ -369,8 +356,8 @@ export class TestEditorComponent implements OnInit, AfterViewInit, OnDestroy {
     this.testAction.emitFilter(this.filter);
     this.cdr.detectChanges();
     this.focusNextPara();
-    // this.cdr.detectChanges();
   }
+
   ngOnDestroy(): void {
     this.timerSubscription?.unsubscribe();
     this.destroy$.next(true);

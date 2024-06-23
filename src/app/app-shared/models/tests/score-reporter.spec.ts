@@ -22,7 +22,6 @@ describe('ScoreReporter', () => {
   });
 
   it('should be created', () => {
-    console.log('testmodel', service._testModel);
     expect(service).toBeTruthy();
   });
 

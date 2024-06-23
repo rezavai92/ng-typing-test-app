@@ -1,11 +1,11 @@
 import { WritableSignal } from '@angular/core';
-import { INormalViewConfig } from '../../components/test-editor/test-editor.component';
+import { IEditorViewConfig } from '../../components/test-editor/test-editor.component';
 import { InputKeyHandleStrategy } from './InputKeyHandleStrategy';
 
 export class CharacterKeyHandleStrategy extends InputKeyHandleStrategy {
   override handleKey(
     key: string,
-    configSignal: WritableSignal<INormalViewConfig>,
+    configSignal: WritableSignal<IEditorViewConfig>,
     callback: Function | null
   ): void {
     let config = configSignal();
