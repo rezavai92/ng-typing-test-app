@@ -16,8 +16,8 @@
           <mat-select [(value)]="selectedDuration">
             <mat-option
               *ngFor="let duration of durationOptions"
-              [value]="duration"
-              >{{ duration }}</mat-option
+              [value]="duration.value"
+              >{{ duration.title }}</mat-option
             >
           </mat-select>
         </mat-form-field>

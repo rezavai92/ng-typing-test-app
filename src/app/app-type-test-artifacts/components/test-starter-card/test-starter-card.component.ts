@@ -8,7 +8,13 @@ import { TestActionService } from '../../services/test-action.service';
   styleUrl: './test-starter-card.component.scss',
 })
 export class TestStarterCardComponent {
-  durationOptions = [30, 60, 120, 180, 300];
+  durationOptions = [
+    { title: '30 sec', value: 30 },
+    { title: '1 minute', value: 60 },
+    { title: '2 minutes', value: 120 },
+    { title: '3 minutes', value: 180 },
+    { title: '5 minutes', value: 300 },
+  ];
 
   difficultyLevels: difficultyLevel[] = ['easy', 'medium', 'hard'];
 
